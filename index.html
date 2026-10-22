@@ -975,13 +975,27 @@ const SONG=(()=>{
    W("Syng",F),W("det",F),W("med",E),W("meg",E),W("en",D),W("gang",D),W("til!",C,2)
   ];
 })();
-let AB={view:"sing",playing:false,voice:true,tempo:0.5,ctx:null,timers:[]};
+let AB={view:"one",li:0,playing:false,voice:true,tempo:0.5,ctx:null,timers:[]};
 function renderAbc(){
   const el=$("#tab-abc");
   let h=`<div class="row" role="group" aria-label="Alphabet view">
+    <button class="chip" data-abv="one" aria-pressed="${AB.view==="one"}">1 by 1</button>
     <button class="chip" data-abv="sing" aria-pressed="${AB.view==="sing"}">Sing along</button>
-    <button class="chip" data-abv="sounds" aria-pressed="${AB.view==="sounds"}">Letter sounds</button></div>`;
-  if(AB.view==="sing"){
+    <button class="chip" data-abv="sounds" aria-pressed="${AB.view==="sounds"}">All letters</button></div>`;
+  if(AB.view==="one"){
+    const a=ABC[AB.li], ext=AB.li>25;
+    h+=`<div class="note" style="margin-top:12px">Letter ${AB.li+1} of ${ABC.length} · listen, then say it out loud</div>
+    <div class="card" style="gap:12px">
+      <div class="answer" style="font-size:5rem;${ext?"color:var(--accent)":""}">${a[0]}<span style="font-size:.5em;color:var(--muted)"> ${a[0].toLowerCase()}</span></div>
+      <button class="say" data-say="${esc(a[1])}" style="padding:10px 20px;font-size:1rem">${ICON_SPK} Name: ${esc(a[1])}</button>
+      <div class="hint" style="font-size:1rem;max-width:40ch">${esc(a[2])}</div>
+      <div class="sent"><div class="no" style="display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap">Example: <b>${esc(a[3])}</b> ${sayBtn(a[3])}</div><div class="en">${esc(a[4])}</div></div>
+    </div>
+    <div class="row" style="flex-wrap:nowrap;gap:8px">
+      ${AB.li>0?`<button class="big" id="abPrev" style="flex:1">← Back</button>`:""}
+      <button class="big primary" id="abNext" style="flex:2">${AB.li<ABC.length-1?"Next letter →":"Start again"}</button>
+    </div>`;
+  }else if(AB.view==="sing"){
     h+=`<p class="note">The melody plays and each letter lights up. Sing along! Tap any letter to hear its name. The red letters are the three extra Norwegian ones.</p>
     <div class="letters">${ABC.map((a,i)=>`<button data-li="${i}" class="${i>25?"ext":""}" aria-label="${a[0]}, ${esc(a[1])}">${a[0]}</button>`).join("")}</div>
     <div class="lyrics" aria-hidden="true">
@@ -1005,7 +1019,9 @@ function renderAbc(){
     </div>`).join("")}</div>`;
   }
   el.innerHTML=h;
-  el.querySelectorAll("[data-abv]").forEach(b=>b.onclick=()=>{ stopSong(); AB.view=b.dataset.abv; renderAbc(); });
+  el.querySelectorAll("[data-abv]").forEach(b=>b.onclick=()=>{ stopSong(); AB.view=b.dataset.abv; renderAbc(); if(AB.view==="one") say(ABC[AB.li][1]); });
+  const an=$("#abNext"); if(an) an.onclick=()=>{ AB.li=(AB.li+1)%ABC.length; renderAbc(); say(ABC[AB.li][1]); };
+  const ap=$("#abPrev"); if(ap) ap.onclick=()=>{ AB.li--; renderAbc(); say(ABC[AB.li][1]); };
   el.querySelectorAll("[data-li]").forEach(b=>b.onclick=()=>say(ABC[+b.dataset.li][1]));
   el.querySelectorAll("[data-tempo]").forEach(b=>b.onclick=()=>{ AB.tempo=+b.dataset.tempo; const p=AB.playing; stopSong(); renderAbc(); if(p) playSong(); });
   const vt=$("#voiceTog"); if(vt) vt.onclick=()=>{ AB.voice=!AB.voice; vt.setAttribute("aria-pressed",AB.voice); };
