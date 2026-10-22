@@ -334,6 +334,143 @@ const DATA = {
 ]};
 const ALTS = {"sju":["syv"],"en kjæreste":["kjæresten"]};
 const STARTER = ["Basics","Pronouns"];
+/* Extra words so every lesson has 15 */
+const MORE={
+"Basics":[
+ ["hallo","hello (also on the phone)","Hallo, er det Erik?","Hello, is that Erik?"],
+ ["god dag","good day (formal)","God dag, hvordan står det til?","Good day, how are you? (formal)"],
+ ["god kveld","good evening","God kveld, alle sammen!","Good evening, everyone!"],
+ ["tusen takk","thanks a lot","Tusen takk for gaven!","Thanks a lot for the present!"],
+ ["takk skal du ha","thank you very much","Takk skal du ha for hjelpen!","Thank you so much for the help!"],
+ ["vi ses","see you","Vi ses snart!","See you soon!"],
+ ["ha det bra","goodbye, take care","Ha det bra, og god tur!","Goodbye, and have a good trip!"],
+ ["bare hyggelig","you're welcome","– Takk! – Bare hyggelig!","– Thanks! – You're welcome!"],
+ ["beklager","I'm sorry","Beklager, jeg er sen.","Sorry, I'm late."],
+ ["ingen årsak","don't mention it","– Takk for hjelpen! – Ingen årsak.","– Thanks for the help! – Don't mention it."]
+],
+"Pronouns":[
+ ["meg","me","Kan du hjelpe meg?","Can you help me?"],
+ ["deg","you (object)","Hun liker deg.","She likes you."],
+ ["ham","him","Jeg kjenner ham.","I know him."],
+ ["henne","her","Jeg ringer henne i kveld.","I'll call her tonight."],
+ ["oss","us","Kom og besøk oss!","Come and visit us!"],
+ ["dem","them","Jeg liker dem.","I like them."]
+],
+"Small words":[
+ ["fra","from","Jeg er fra Kina.","I am from China."],
+ ["kanskje","maybe","Kanskje i morgen.","Maybe tomorrow."],
+ ["selvfølgelig","of course","Selvfølgelig kan jeg hjelpe!","Of course I can help!"],
+ ["litt","a little","Jeg snakker litt norsk.","I speak a little Norwegian."],
+ ["veldig","very","Det er veldig godt.","It's very good."],
+ ["norsk","Norwegian","Jeg lærer norsk.","I'm learning Norwegian."]
+],
+"Questions":[
+ ["hvilken","which","Hvilken bok vil du ha?","Which book do you want?"],
+ ["hvor mange","how many","Hvor mange barn har du?","How many children do you have?"],
+ ["hvor gammel","how old","Hvor gammel er du?","How old are you?"],
+ ["hva slags","what kind of","Hva slags musikk liker du?","What kind of music do you like?"],
+ ["et spørsmål","question","Jeg har et spørsmål.","I have a question."]
+],
+"Numbers":[
+ ["null","zero","Det er null grader ute.","It's zero degrees outside."],
+ ["elleve","eleven","Hun er elleve år gammel.","She is eleven years old."],
+ ["tolv","twelve","Klokka er tolv.","It's twelve o'clock."],
+ ["tjue","twenty","Jeg er tjue år gammel.","I am twenty years old."],
+ ["hundre","hundred","Det koster hundre kroner.","It costs a hundred kroner."]
+],
+"People":[
+ ["en mor","mother","Moren min heter Anne.","My mother's name is Anne."],
+ ["en far","father","Faren min er lærer.","My father is a teacher."],
+ ["foreldre","parents","Foreldrene mine bor i Norge.","My parents live in Norway."],
+ ["en sønn","son","De har en sønn.","They have a son."],
+ ["en datter","daughter","Datteren deres er fem år.","Their daughter is five."],
+ ["en mann","man / husband","Mannen hennes er fra Bergen.","Her husband is from Bergen."],
+ ["en kone","wife","Kona hans heter Lise.","His wife is called Lise."]
+],
+"Verbs":[
+ ["å hete","to be called","Hva heter du?","What is your name?"],
+ ["å lære","to learn","Hun lærer norsk hver dag.","She learns Norwegian every day."],
+ ["å si","to say","Hva sa du?","What did you say?"],
+ ["å spørre","to ask","Kan jeg spørre deg om noe?","Can I ask you something?"],
+ ["å svare","to answer","Hun svarer ikke på telefonen.","She isn't answering the phone."],
+ ["å bety","to mean","Hva betyr det?","What does that mean?"],
+ ["å gjøre","to do","Hva gjør du?","What are you doing?"],
+ ["å stå opp","to get up","Jeg står opp klokka sju.","I get up at seven."],
+ ["å legge seg","to go to bed","Vi legger oss klokka elleve.","We go to bed at eleven."],
+ ["å vaske","to wash","Jeg vasker klærne i dag.","I'm washing the clothes today."],
+ ["å dusje","to shower","Hun dusjer om morgenen.","She showers in the morning."],
+ ["å kjøre","to drive","Kan du kjøre meg til stasjonen?","Can you drive me to the station?"],
+ ["å ta","to take","Vi tar bussen til byen.","We take the bus to town."],
+ ["å ringe","to call","Jeg ringer deg i kveld.","I'll call you tonight."],
+ ["å vente","to wait","Kan du vente litt?","Can you wait a bit?"],
+ ["å smake","to taste","Smak på denne!","Taste this!"],
+ ["å bestille","to order","Vil du bestille nå?","Would you like to order now?"],
+ ["å savne","to miss","Jeg savner deg.","I miss you."],
+ ["å føle seg","to feel","Hvordan føler du deg?","How are you feeling?"],
+ ["å regne","to rain","Det regner i dag.","It's raining today."],
+ ["å måtte","to have to (må)","Du må prøve brunost!","You have to try brown cheese!"],
+ ["å skulle","to be going to (skal)","Hva skal vi gjøre i helgen?","What shall we do this weekend?"],
+ ["å prøve","to try","Jeg skal prøve.","I'll try."],
+ ["å begynne","to begin","Filmen begynner klokka åtte.","The film begins at eight."],
+ ["å reise","to travel","Vi skal reise til Norge til sommeren.","We're going to Norway this summer."]
+],
+"Food":[
+ ["en kylling","chicken","Vi har kylling til middag.","We're having chicken for dinner."],
+ ["et kjøtt","meat","Hun spiser ikke kjøtt.","She doesn't eat meat."],
+ ["en ris","rice","Ris er vanlig i Kina.","Rice is common in China."],
+ ["en grønnsak","vegetable","Spis grønnsakene dine!","Eat your vegetables!"],
+ ["en øl","beer","En øl, takk!","A beer, please!"],
+ ["en vin","wine","Vil du ha et glass vin?","Do you want a glass of wine?"],
+ ["en lunsj","lunch","Vi spiser lunsj klokka tolv.","We have lunch at twelve."],
+ ["en kopp","cup","En kopp te, takk.","A cup of tea, please."],
+ ["et glass","glass","Glasset er tomt.","The glass is empty."],
+ ["en tallerken","plate","Tallerkenen er varm.","The plate is hot."],
+ ["godt","tasty / good","Mmm, det smaker godt!","Mmm, it tastes good!"]
+],
+"Time":[
+ ["en morgen","morning","Hver morgen drikker jeg kaffe.","Every morning I drink coffee."],
+ ["en natt","night","Natten var lang.","The night was long."],
+ ["en time","hour","Det tar en time.","It takes an hour."],
+ ["et minutt","minute","Vent et minutt!","Wait a minute!"],
+ ["en måned","month","Vi reiser om en måned.","We're travelling in a month."],
+ ["snart","soon","Middagen er snart klar.","Dinner will be ready soon."],
+ ["etterpå","afterwards / later","Vi kan snakke etterpå.","We can talk later."]
+],
+"Adjectives":[
+ ["dårlig","bad","Været er dårlig i dag.","The weather is bad today."],
+ ["lang","long","Det var en lang dag.","It was a long day."],
+ ["kort","short","Filmen var kort.","The film was short."],
+ ["billig","cheap","Denne jakken er billig.","This jacket is cheap."],
+ ["vanskelig","difficult","Norsk er ikke så vanskelig!","Norwegian isn't that difficult!"],
+ ["lett","easy / light","Det er lett!","It's easy!"],
+ ["vakker","beautiful","Norge er et vakkert land.","Norway is a beautiful country."],
+ ["trist","sad","Hun er litt trist i dag.","She is a bit sad today."],
+ ["sint","angry","Er du sint på meg?","Are you angry with me?"],
+ ["syk","sick","Jeg er syk i dag.","I'm sick today."],
+ ["redd","scared","Hunden er redd for katten.","The dog is scared of the cat."],
+ ["tørst","thirsty","Jeg er så tørst!","I'm so thirsty!"],
+ ["snill","kind","Du er så snill!","You are so kind!"]
+],
+"Home & places":[
+ ["et kjøkken","kitchen","Mamma er på kjøkkenet.","Mum is in the kitchen."],
+ ["et bad","bathroom","Hvor er badet?","Where is the bathroom?"],
+ ["en stue","living room","Vi ser på TV i stua.","We watch TV in the living room."],
+ ["et bord","table","Maten står på bordet.","The food is on the table."],
+ ["en stol","chair","Sett deg på stolen.","Sit down on the chair."],
+ ["et vindu","window","Kan du åpne vinduet?","Can you open the window?"],
+ ["en nøkkel","key","Hvor er nøkkelen min?","Where is my key?"],
+ ["et hav","sea / ocean","Huset ligger ved havet.","The house is by the sea."],
+ ["en skog","forest","Vi går tur i skogen.","We go for a walk in the forest."],
+ ["en innsjø","lake","Vi bader i innsjøen om sommeren.","We swim in the lake in summer."],
+ ["et vær","weather","Hvordan er været i dag?","How is the weather today?"],
+ ["en sol","sun","Sola skinner!","The sun is shining!"],
+ ["en vinter","winter","Vinteren er lang i Norge.","Winter is long in Norway."],
+ ["en sommer","summer","Om sommeren er det lyst hele natta.","In summer it's light all night."],
+ ["et tog","train","Vi tar toget til Bergen.","We take the train to Bergen."]
+]};
+for(const c in MORE){ DATA[c]=(DATA[c]||[]).concat(MORE[c]); }
+Object.assign(ALTS,{"ham":["han"],"en kone":["kona"],"en stue":["stua"],"en sol":["sola"],"en natt":["natta"]});
+
 
 /* ---------- State ---------- */
 const KEY = "norsk-ordkort-v1";
@@ -434,7 +571,7 @@ const ICON_X='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-
 
 /* ---------- Speech recognition ---------- */
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-const DIGITS={"0":"null","1":"en","2":"to","3":"tre","4":"fire","5":"fem","6":"seks","7":"sju","8":"åtte","9":"ni","10":"ti"};
+const DIGITS={"0":"null","1":"en","2":"to","3":"tre","4":"fire","5":"fem","6":"seks","7":"sju","8":"åtte","9":"ni","10":"ti","11":"elleve","12":"tolv","20":"tjue","100":"hundre"};
 function norm(s){
   return s.toLowerCase().normalize("NFC").replace(/[.,!?¡¿"'()«»:;]/g," ").replace(/\b\d+\b/g,d=>DIGITS[d]||d).replace(/\s+/g," ").trim();
 }
@@ -732,6 +869,27 @@ const LESSONS=[
     {q:"\"Jeg vet ikke\" means…",o:["I don't know.","I don't see.","I don't want to.","I won't."],a:0,e:["Correct. vite → vet (irregular).","That's jeg ser ikke.","That's jeg vil ikke.","That's jeg vil ikke / skal ikke."],k:"vite → vet. One of the few irregular verbs."}],
  task:"Plan the weekend in Norwegian: Vi skal …, jeg vil …, vi må …"}
 ];
+
+/* Extra words per lesson (to 15 each) */
+const SW="Small words:";
+const EXTRA=[
+ [B+"hallo",B+"god dag",B+"god kveld",B+"tusen takk",B+"takk skal du ha",B+"vi ses",B+"ha det bra",B+"bare hyggelig"],
+ [P+"meg",P+"deg",P+"ham",P+"henne",P+"oss",P+"dem",V+"å hete",SW+"fra"],
+ [B+"beklager",B+"ingen årsak",SW+"kanskje",SW+"selvfølgelig",SW+"litt",SW+"veldig",SW+"norsk",V+"å lære",V+"å si"],
+ [Q+"hvilken",Q+"hvor mange",Q+"hvor gammel",Q+"hva slags",Q+"et spørsmål",V+"å spørre",V+"å svare",V+"å bety"],
+ [NU+"null",NU+"elleve",NU+"tolv",NU+"tjue",NU+"hundre"],
+ [PE+"en mor",PE+"en far",PE+"foreldre",PE+"en sønn",PE+"en datter",PE+"en mann",PE+"en kone"],
+ [V+"å gjøre",V+"å stå opp",V+"å legge seg",V+"å vaske",V+"å dusje",V+"å kjøre",V+"å ta",V+"å ringe",V+"å vente"],
+ [F+"en kylling",F+"et kjøtt",F+"en ris",F+"en grønnsak",F+"en øl",F+"en vin"],
+ [F+"en lunsj",F+"en kopp",F+"et glass",F+"en tallerken",F+"godt",V+"å smake",V+"å bestille"],
+ [T+"en morgen",T+"en natt",T+"en time",T+"et minutt",T+"en måned",T+"snart",T+"etterpå"],
+ [A+"dårlig",A+"lang",A+"kort",A+"billig",A+"vanskelig",A+"lett",A+"vakker"],
+ [A+"trist",A+"sint",A+"syk",A+"redd",A+"tørst",A+"snill",V+"å savne",V+"å føle seg"],
+ [H+"et kjøkken",H+"et bad",H+"en stue",H+"et bord",H+"en stol",H+"et vindu",H+"en nøkkel"],
+ [H+"et hav",H+"en skog",H+"en innsjø",H+"et vær",H+"en sol",H+"en vinter",H+"en sommer",H+"et tog",V+"å regne"],
+ [V+"å måtte",V+"å skulle",V+"å prøve",V+"å begynne",V+"å reise"]
+];
+LESSONS.forEach((L,i)=>{ L.w=L.w.concat(EXTRA[i]); });
 /* Per grammar question: [Norwegian spoken when answering, example sentence, its English] */
 const GQA=[
  [["Å. År.","Jeg har bodd her i ett år.","I have lived here for one year."],["Ha det!","Ha det, vi ses i morgen!","Bye, see you tomorrow!"]],
@@ -756,7 +914,7 @@ function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.fl
 function buildQuiz(L){
   const ws=L.w.map(id=>BYID[id]).filter(Boolean);
   const pool=ws.length>=4?ws:ws.concat(WORDS.filter(w=>!L.w.includes(w.id)).slice(0,4));
-  const vocab=shuffle(ws).slice(0,4).map((w,i)=>{
+  const vocab=shuffle(ws).slice(0,8).map((w,i)=>{
     const opts=shuffle([w,...shuffle(pool.filter(x=>x.id!==w.id)).slice(0,3)]);
     const toNo=i%2===0;
     return {q:toNo?`How do you say "${w.en}" in Norwegian?`:`What does "${w.no}" mean?`,say:toNo?null:w.no,
@@ -769,7 +927,7 @@ function buildQuiz(L){
 const STEP_NAMES=["New words","Grammar","Quiz","Speak","Together"];
 function startLesson(i){
   const L=LESSONS[i];
-  const speakIds=shuffle(L.w.filter(id=>BYID[id])).slice(0,3);
+  const speakIds=shuffle(L.w.filter(id=>BYID[id])).slice(0,5);
   LS={i,step:0,wi:0,quiz:buildQuiz(L),qi:0,picked:null,wrong:0,sp:{ids:speakIds,k:0,status:"idle",tries:0,heard:""}};
   renderLearn(); window.scrollTo(0,0);
   const w0=BYID[L.w[0]]; if(w0) say(w0.no);
@@ -799,7 +957,7 @@ function lessonHome(){
   else {
     const L=LESSONS[cur];
     h+=`<div class="today"><span class="eyebrow">Dagens leksjon · Lesson ${cur+1}</span>
-      <h2>${esc(L.t)}</h2><span class="sub">${esc(L.sub)} · ${L.w.length} new words · about 20 min</span>
+      <h2>${esc(L.t)}</h2><span class="sub">${esc(L.sub)} · ${L.w.length} new words · about 25 min</span>
       ${due?`<span class="note">First, review the <b>${due}</b> card${due>1?"s":""} waiting in Kort (about ${Math.max(2,Math.round(due*0.3))} min).</span>`:""}
       <button class="big primary" data-start="${cur}">${doneN?"Start today's lesson":"Start lesson 1"}</button></div>`;
   }
@@ -875,7 +1033,7 @@ function stepTogether(L){
 function stepDone(L){
   const nxt=lessonIndex();
   return `<div class="card right"><div class="prompt">Leksjon ${LS.i+1} er ferdig!</div>
-    <div class="hint">${L.w.length} words added to Kort and Snakk. They'll come back for review on the right days.</div>
+    <div class="hint">${L.w.length} words added to Kort and Snakk. Review them in Kort now, then they come back on the right days. Want more? The next lesson is ready.</div>
     ${nxt!==-1?`<div class="hint">Next up: <b>${esc(LESSONS[nxt].t)}</b>, unlocked.</div>`:""}</div>
     <button class="big primary" id="toCards">Review cards now</button>
     <button class="big" id="toHome">Back to lessons</button>`;
@@ -924,7 +1082,9 @@ function bindStep(){
 }
 function finishLesson(){
   const L=LESSONS[LS.i];
-  L.w.forEach(id=>{ if(BYID[id]) S.deck[id]=true; });
+  const now=Date.now();
+  L.w.forEach(id=>{ if(!BYID[id]) return; S.deck[id]=true;
+    ["normal","speak"].forEach(m=>{ if(!S.srs[m][id]) S.srs[m][id]={int:0,ease:2.5,reps:0,due:now}; }); });
   S.lessons[LS.i]=today(); save(); resetQueues();
   LS.step=5; renderLearn(); window.scrollTo(0,0);
 }
