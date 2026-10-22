@@ -120,7 +120,7 @@ details summary{cursor:pointer;font-weight:700;padding:6px 0}
 .lrow .t b{display:block}
 .lrow .t span{color:var(--muted);font-size:.85rem}
 .lrow .s{font-size:.8rem;color:var(--muted)}
-.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:10px 0 4px}
+.steps{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:10px 0 4px}
 .steps span{height:5px;border-radius:3px;background:var(--line)}
 .steps span.on{background:var(--accent)}
 .steps span.past{background:var(--good)}
@@ -469,6 +469,36 @@ const MORE={
  ["et tog","train","Vi tar toget til Bergen.","We take the train to Bergen."]
 ]};
 for(const c in MORE){ DATA[c]=(DATA[c]||[]).concat(MORE[c]); }
+
+/* Simpler example sentences (A1 level) */
+const SIMPLER={
+ "god morgen":["God morgen! Hvordan går det?","Good morning! How are you?"],
+ "god dag":["God dag, Anne!","Good day, Anne!"],
+ "takk skal du ha":["Takk skal du ha!","Thank you very much!"],
+ "ha det bra":["Ha det bra! Vi ses!","Goodbye! See you!"],
+ "å si":["Hva sier du?","What are you saying?"],
+ "å spørre":["Kan jeg spørre deg?","Can I ask you?"],
+ "en grønnsak":["Jeg liker grønnsaker.","I like vegetables."],
+ "en fisk":["Jeg liker fisk.","I like fish."],
+ "et år":["Et år har tolv måneder.","A year has twelve months."],
+ "aldri":["Han er aldri sen.","He is never late."],
+ "å glemme":["Ikke glem nøkkelen!","Don't forget the key!"],
+ "en natt":["Natten er lang.","The night is long."],
+ "kort":["Filmen er kort.","The film is short."],
+ "lang":["Dagen er lang.","The day is long."],
+ "en seng":["Sengen er stor.","The bed is big."],
+ "en telefon":["Hvor er telefonen min?","Where is my phone?"],
+ "en hytte":["Vi har en hytte.","We have a cabin."],
+ "en butikk":["Jeg går til butikken.","I'm going to the shop."],
+ "en sommer":["Sommeren er fin.","Summer is nice."],
+ "en innsjø":["Innsjøen er kald.","The lake is cold."],
+ "å kjøre":["Han kjører bil.","He drives a car."],
+ "å reise":["Jeg vil reise til Norge.","I want to travel to Norway."],
+ "å skulle":["Vi skal spise nå.","We are going to eat now."],
+ "å ville":["Jeg vil ha kaffe.","I want coffee."],
+ "et rom":["Rommet er lite.","The room is small."]
+};
+for(const c in DATA) for(const w of DATA[c]){ const r=SIMPLER[w[0]]; if(r){ w[2]=r[0]; w[3]=r[1]; } }
 Object.assign(ALTS,{"ham":["han"],"en kone":["kona"],"en stue":["stua"],"en sol":["sola"],"en natt":["natta"]});
 
 
@@ -573,7 +603,7 @@ const ICON_X='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 const DIGITS={"0":"null","1":"en","2":"to","3":"tre","4":"fire","5":"fem","6":"seks","7":"sju","8":"åtte","9":"ni","10":"ti","11":"elleve","12":"tolv","20":"tjue","100":"hundre"};
 function norm(s){
-  return s.toLowerCase().normalize("NFC").replace(/[.,!?¡¿"'()«»:;]/g," ").replace(/\b\d+\b/g,d=>DIGITS[d]||d).replace(/\s+/g," ").trim();
+  return s.toLowerCase().normalize("NFC").replace(/[.,!?¡¿"'()«»:;/–]/g," ").replace(/\b\d+\b/g,d=>DIGITS[d]||d).replace(/\s+/g," ").trim();
 }
 function stripLead(s){ return s.replace(/^(å|en|ei|et) (?=\S)/,""); }
 function lev(a,b){
@@ -890,6 +920,26 @@ const EXTRA=[
  [V+"å måtte",V+"å skulle",V+"å prøve",V+"å begynne",V+"å reise"]
 ];
 LESSONS.forEach((L,i)=>{ L.w=L.w.concat(EXTRA[i]); });
+
+/* Three simple sentences per lesson, built from that lesson's words */
+const LSENT=[
+ [["Hei! God morgen!","Hi! Good morning!"],["Tusen takk! – Bare hyggelig.","Thanks a lot! – You're welcome."],["Ha det bra! Vi ses!","Goodbye! See you!"]],
+ [["Jeg er fra Kina.","I am from China."],["Han er fra Norge.","He is from Norway."],["Vi er i Japan.","We are in Japan."]],
+ [["Jeg snakker litt norsk.","I speak a little Norwegian."],["Unnskyld, jeg forstår ikke.","Sorry, I don't understand."],["Jeg lærer norsk.","I am learning Norwegian."]],
+ [["Hva heter du?","What is your name?"],["Hvor gammel er du?","How old are you?"],["Hva betyr det?","What does that mean?"]],
+ [["Klokka er ti.","It's ten o'clock."],["Hvor mye koster det?","How much does it cost?"],["Det koster fem kroner.","It costs five kroner."]],
+ [["Han er broren min.","He is my brother."],["Hun er kjæresten min.","She is my girlfriend."],["Mamma er fra Kina.","Mum is from China."]],
+ [["Jeg bor i Tokyo.","I live in Tokyo."],["Hva gjør du?","What are you doing?"],["Jeg står opp klokka sju.","I get up at seven."]],
+ [["Kan jeg få en kaffe?","Can I have a coffee?"],["Vann, takk.","Water, please."],["Brød og ost, takk.","Bread and cheese, please."]],
+ [["Jeg spiser frokost.","I'm eating breakfast."],["Hun drikker en kopp te.","She is drinking a cup of tea."],["Det smaker godt!","It tastes good!"]],
+ [["I dag jobber jeg.","Today I'm working."],["Vi ses i morgen.","See you tomorrow."],["Vent et minutt!","Wait a minute!"]],
+ [["Det er kaldt i dag.","It's cold today."],["Kaffen er varm.","The coffee is hot."],["Norsk er ikke vanskelig.","Norwegian isn't difficult."]],
+ [["Jeg er trøtt.","I'm tired."],["Jeg er glad i deg.","I love you."],["Jeg savner deg.","I miss you."]],
+ [["Hvor er badet?","Where is the bathroom?"],["Maten er på bordet.","The food is on the table."],["Jeg har ikke penger.","I don't have any money."]],
+ [["Det regner i dag.","It's raining today."],["Vi går tur på fjellet.","We go hiking in the mountains."],["Norge er et vakkert land.","Norway is a beautiful country."]],
+ [["Jeg vil reise til Norge.","I want to travel to Norway."],["Jeg må gå nå.","I have to go now."],["Kan du hjelpe meg?","Can you help me?"]]
+];
+LESSONS.forEach((L,i)=>{ L.s=LSENT[i]; });
 /* Per grammar question: [Norwegian spoken when answering, example sentence, its English] */
 const GQA=[
  [["Å. År.","Jeg har bodd her i ett år.","I have lived here for one year."],["Ha det!","Ha det, vi ses i morgen!","Bye, see you tomorrow!"]],
@@ -924,11 +974,15 @@ function buildQuiz(L){
   });
   return [...vocab,...L.q.map((x,j)=>{ const a=(GQA[LESSONS.indexOf(L)]||[])[j]||[]; return Object.assign({},x,{n:a[0],ks:a[1],kse:a[2]}); })];
 }
-const STEP_NAMES=["New words","Grammar","Quiz","Speak","Together"];
+const STEP_NAMES=["New words","Read aloud","Grammar","Sentences","Quiz","Speak from memory","Together"];
+const DONE_STEP=7;
 function startLesson(i){
   const L=LESSONS[i];
-  const speakIds=shuffle(L.w.filter(id=>BYID[id])).slice(0,5);
-  LS={i,step:0,wi:0,quiz:buildQuiz(L),qi:0,picked:null,wrong:0,sp:{ids:speakIds,k:0,status:"idle",tries:0,heard:""}};
+    const words=L.w.map(id=>BYID[id]).filter(Boolean);
+  LS={i,step:0,wi:0,quiz:buildQuiz(L),qi:0,picked:null,
+    rd:micState(words.map(w=>({t:w.no,w})),"read"),
+    sn:micState(L.s.map(x=>({t:x[0],en:x[1],sent:true})),"sent"),
+    sp:micState(shuffle(words).map(w=>({t:w.no,en:w.en,w})).concat(L.s.map(x=>({t:x[0],en:x[1],sent:true}))),"recall")};
   renderLearn(); window.scrollTo(0,0);
   const w0=BYID[L.w[0]]; if(w0) say(w0.no);
 }
@@ -938,13 +992,15 @@ function renderLearn(){
   const L=LESSONS[LS.i];
   let h=`<div class="lhead"><button class="link" id="backL">← All lessons</button><span class="note">Lesson ${LS.i+1} of ${LESSONS.length}</span></div>
   <div class="lhead"><h2>${esc(L.t)}</h2></div>
-  ${LS.step<5?`<div class="steps">${STEP_NAMES.map((n,i)=>`<span class="${i<LS.step?"past":i===LS.step?"on":""}"></span>`).join("")}</div>
-  <div class="stepname">Step ${LS.step+1} of 5 · ${STEP_NAMES[LS.step]}</div>`:""}`;
+  ${LS.step<DONE_STEP?`<div class="steps">${STEP_NAMES.map((n,i)=>`<span class="${i<LS.step?"past":i===LS.step?"on":""}"></span>`).join("")}</div>
+  <div class="stepname">Step ${LS.step+1} of ${DONE_STEP} · ${STEP_NAMES[LS.step]}</div>`:""}`;
   if(LS.step===0) h+=stepWords(L);
-  else if(LS.step===1) h+=stepGrammar(L);
-  else if(LS.step===2) h+=stepQuiz();
-  else if(LS.step===3) h+=stepSpeak();
-  else if(LS.step===4) h+=stepTogether(L);
+  else if(LS.step===1) h+=micStep(LS.rd,"Next: grammar");
+  else if(LS.step===2) h+=stepGrammar(L);
+  else if(LS.step===3) h+=micStep(LS.sn,"Next: quiz");
+  else if(LS.step===4) h+=stepQuiz();
+  else if(LS.step===5) h+=micStep(LS.sp,"Next: together");
+  else if(LS.step===6) h+=stepTogether(L);
   else h+=stepDone(L);
   el.innerHTML=h;
   $("#backL").onclick=()=>{ try{ if(rec) rec.abort(); }catch(e){} LS=null; renderLearn(); };
@@ -957,7 +1013,7 @@ function lessonHome(){
   else {
     const L=LESSONS[cur];
     h+=`<div class="today"><span class="eyebrow">Dagens leksjon · Lesson ${cur+1}</span>
-      <h2>${esc(L.t)}</h2><span class="sub">${esc(L.sub)} · ${L.w.length} new words · about 25 min</span>
+      <h2>${esc(L.t)}</h2><span class="sub">${esc(L.sub)} · ${L.w.length} new words · about 30 min</span>
       ${due?`<span class="note">First, review the <b>${due}</b> card${due>1?"s":""} waiting in Kort (about ${Math.max(2,Math.round(due*0.3))} min).</span>`:""}
       <button class="big primary" data-start="${cur}">${doneN?"Start today's lesson":"Start lesson 1"}</button></div>`;
   }
@@ -983,12 +1039,12 @@ function stepWords(L){
   </div>
   <div class="row" style="flex-wrap:nowrap;gap:8px">
     ${LS.wi>0?`<button class="big" id="wPrev" style="flex:1">← Back</button>`:""}
-    <button class="big primary" id="wNext" style="flex:2">${last?"Next: grammar":"Next word →"}</button>
+    <button class="big primary" id="wNext" style="flex:2">${last?"Next: read aloud":"Next word →"}</button>
   </div>`;
 }
 function stepGrammar(L){
   return `<div class="gram"><h3>${esc(L.g.h)}</h3><p>${esc(L.g.p)}</p>
-    <div class="exs">${L.g.ex.map(x=>`<div>${sayBtn(x[0])}<b>${esc(x[0])}</b><i>${esc(x[1])}</i></div>`).join("")}</div></div>${nextBtn("Next: quiz")}`;
+    <div class="exs">${L.g.ex.map(x=>`<div>${sayBtn(x[0])}<b>${esc(x[0])}</b><i>${esc(x[1])}</i></div>`).join("")}</div></div>${nextBtn("Next: say sentences")}`;
 }
 function stepQuiz(){
   const q=LS.quiz[LS.qi], ans=LS.picked!==null;
@@ -1006,25 +1062,31 @@ function stepQuiz(){
   if(ans){
     if(q.k||q.ks) h+=`<div class="key">💡 <b>Key point:</b> ${esc(q.k||"")}
       ${q.ks?`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px">${sayBtn(q.ks)}<b>${esc(q.ks)}</b><span class="note">${esc(q.kse||"")}</span></div>`:""}</div>`;
-    h+=nextBtn(LS.qi+1<LS.quiz.length?"Next question":"Next: speak");
+    h+=nextBtn(LS.qi+1<LS.quiz.length?"Next question":"Next: speak from memory");
   }
   return h;
 }
-function stepSpeak(){
-  const sp=LS.sp;
-  if(!SR) return `<div class="card"><div class="prompt">Microphone checking isn't available in this browser</div><div class="hint">Say the lesson words to Denis instead, then continue.</div></div>${nextBtn("Next: together")}`;
-  if(sp.k>=sp.ids.length) return `<div class="card right"><div class="prompt">Bra jobba!</div><div class="hint">Speaking done.</div></div>${nextBtn("Next: together")}`;
-  const w=BYID[sp.ids[sp.k]], st=sp.status, fin=st==="right"||st==="revealed";
-  return `<div class="note">Word ${sp.k+1} of ${sp.ids.length}</div>
+function micState(items,kind){ return {items,kind,k:0,status:"idle",tries:0,heard:"",err:"",timer:null}; }
+function curMic(){ return LS.step===1?LS.rd:LS.step===3?LS.sn:LS.step===5?LS.sp:null; }
+const MIC_HINT={read:"Read it out loud",sent:"Listen, then say the whole sentence",recall:"Say it in Norwegian"};
+function micStep(ms,nextLabel){
+  if(!SR) return `<div class="card"><div class="prompt">Mic checking isn't available in this browser</div><div class="hint">Say these to Denis instead:</div>
+    <div class="wl" style="width:100%">${ms.items.map(it=>`<div class="ex" style="display:flex;gap:8px;align-items:center;justify-content:center">${sayBtn(it.t)}<b>${esc(it.t)}</b></div>`).join("")}</div></div>${nextBtn(nextLabel)}`;
+  if(ms.k>=ms.items.length) return `<div class="card right"><div class="prompt">Bra jobba!</div><div class="hint">All ${ms.items.length} done.</div></div>${nextBtn(nextLabel)}`;
+  const it=ms.items[ms.k], st=ms.status, fin=st==="right"||st==="revealed", show=ms.kind!=="recall";
+  const big=it.sent?"font-size:clamp(1.4rem,5.5vw,1.8rem)":"";
+  return `<div class="note">${ms.k+1} of ${ms.items.length}</div>
   <div class="card ${st==="right"?"right":(st==="wrong"||st==="revealed")?"wrong":""}">
-    <div class="hint">Say in Norwegian</div><div class="prompt">${esc(w.en)}</div>
-    ${fin?`<div class="answer">${esc(w.no)}</div>${sayBtn(w.no)}`:""}
-    <div class="heard" aria-live="polite">${sp.heard?`Heard: <b>${esc(sp.heard)}</b>`:""}</div>
-    <div class="verdict ${st==="right"?"ok":"no"}">${st==="right"?"Riktig! ✓":st==="wrong"?"Not quite. Try again ✗":st==="revealed"?"Listen, repeat it once, then go on.":st==="error"?esc(sp.err):""}</div>
-    ${fin?"":`<button class="mic ${st==="listening"?"on":""}" id="lmic" aria-label="Tap and speak">${ICON_MIC}</button>
-      <div class="tries">${st==="listening"?"Listening…":sp.tries?`Try ${sp.tries+1} of 3`:"Tap the mic and speak"}</div>
-      <div class="smallbtns"><button class="link" id="lhear">Hear it</button><button class="link" id="lshow">Show answer</button>${sp.tries||st==="error"?`<button class="link" id="lok">I said it right</button>`:""}</div>`}
-  </div>${fin?`<button class="big primary" id="lnext">Next word</button>`:""}`;
+    <div class="hint">${MIC_HINT[ms.kind]}</div>
+    ${show?`<div class="answer" style="${big}">${esc(it.t)}</div>${it.en&&ms.kind==="sent"?`<div class="hint">${esc(it.en)}</div>`:""}`
+          :`<div class="prompt">${esc(it.en)}</div>${fin?`<div class="answer">${esc(it.t)}</div>`:""}`}
+    ${(show||fin)?sayBtn(it.t," Hear it"):""}
+    <div class="heard" aria-live="polite">${ms.heard?`Heard: <b>${esc(ms.heard)}</b>`:""}</div>
+    <div class="verdict ${st==="right"?"ok":"no"}">${st==="right"?"Riktig! ✓":st==="wrong"?"Not quite. Listen and try again ✗":st==="revealed"?"Listen, say it once more, then go on.":st==="error"?esc(ms.err):""}</div>
+    ${fin?"":`<button class="mic ${st==="listening"?"on":""}" id="mMic" aria-label="Tap and speak">${ICON_MIC}</button>
+      <div class="tries">${st==="listening"?"Listening…":ms.tries?`Try ${ms.tries+1} of 3`:"Tap the mic and speak"}</div>
+      <div class="smallbtns">${show?"":`<button class="link" id="mHear">Hear it</button>`}<button class="link" id="mShow">${show?"Skip":"Show answer"}</button>${ms.tries||st==="error"?`<button class="link" id="mOk">I said it right</button>`:""}</div>`}
+  </div>${fin?`<button class="big primary" id="mNext">Next</button>`:""}`;
 }
 function stepTogether(L){
   return `<div class="task"><span class="eyebrow" style="color:var(--accent);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700">Do this with Denis</span><p>${esc(L.task)}</p></div>
@@ -1041,8 +1103,8 @@ function stepDone(L){
 function bindStep(){
   const nb=$("#stepNext");
   if(nb) nb.onclick=()=>{
-    if(LS.step===2&&LS.qi+1<LS.quiz.length){ LS.qi++; LS.picked=null; renderLearn(); return; }
-    if(LS.step===4){ finishLesson(); return; }
+    if(LS.step===4&&LS.qi+1<LS.quiz.length){ LS.qi++; LS.picked=null; renderLearn(); return; }
+    if(LS.step===6){ finishLesson(); return; }
     LS.step++; LS.picked=null; renderLearn(); window.scrollTo(0,0);
   };
   const ws=LESSONS[LS.i]?LESSONS[LS.i].w.map(id=>BYID[id]).filter(Boolean):[];
@@ -1058,25 +1120,30 @@ function bindStep(){
     if(i!==q.a && !q.retry){ LS.quiz.push(Object.assign({},q,{retry:true})); }
     renderLearn();
   });
-  const sp=LS&&LS.sp;
-  const mic=$("#lmic");
-  if(mic) mic.onclick=()=>{
-    if(sp.status==="listening"){ try{rec.stop();}catch(e){} return; }
-    const w=BYID[sp.ids[sp.k]]; sp.status="listening"; sp.heard=""; renderLearn();
-    listen(alts=>{
-      const r=checkWord(alts,w); sp.heard=r.heard;
-      if(r.ok){ sp.status="right"; renderLearn(); say(w.no); }
-      else { sp.tries++; if(sp.tries>=3){ sp.status="revealed"; renderLearn(); say(w.no); } else { sp.status="wrong"; renderLearn(); } }
-    },err=>{
-      sp.status="error";
-      sp.err=err==="not-allowed"||err==="service-not-allowed"?"Microphone blocked. Allow mic access for this page.":err==="no-speech"?"Didn't hear anything. Try again a bit louder.":err==="network"?"Needs an internet connection.":"Couldn't listen. Try again.";
-      renderLearn();
-    });
-  };
-  const lh=$("#lhear"); if(lh) lh.onclick=()=>say(BYID[sp.ids[sp.k]].no);
-  const ls=$("#lshow"); if(ls) ls.onclick=()=>{ sp.status="revealed"; renderLearn(); say(BYID[sp.ids[sp.k]].no); };
-  const lo=$("#lok"); if(lo) lo.onclick=()=>{ sp.status="right"; renderLearn(); say(BYID[sp.ids[sp.k]].no); };
-  const ln=$("#lnext"); if(ln) ln.onclick=()=>{ sp.k++; sp.status="idle"; sp.tries=0; sp.heard=""; renderLearn(); };
+  const ms=LS&&curMic();
+  if(ms){
+    const it=ms.items[ms.k];
+    const advance=()=>{ clearTimeout(ms.timer); ms.k++; ms.status="idle"; ms.tries=0; ms.heard=""; renderLearn(); };
+    const good=()=>{ ms.status="right"; renderLearn(); const k=ms.k; say(it.t,()=>{ ms.timer=setTimeout(()=>{ if(LS&&curMic()===ms&&ms.k===k&&ms.status==="right") advance(); },900); }); };
+    const mic=$("#mMic");
+    if(mic) mic.onclick=()=>{
+      if(ms.status==="listening"){ try{rec.stop();}catch(e){} return; }
+      ms.status="listening"; ms.heard=""; renderLearn();
+      listen(alts=>{
+        const r=it.sent?checkSentence(alts,{s:it.t}):checkWord(alts,it.w); ms.heard=r.heard;
+        if(r.ok) good();
+        else { ms.tries++; if(ms.tries>=3){ ms.status="revealed"; renderLearn(); say(it.t); } else { ms.status="wrong"; renderLearn(); if(ms.kind!=="recall") say(it.t); } }
+      },err=>{
+        ms.status="error";
+        ms.err=err==="not-allowed"||err==="service-not-allowed"?"Microphone blocked. Allow mic access for this page.":err==="no-speech"?"Didn't hear anything. Try again a bit louder.":err==="network"?"Needs an internet connection.":"Couldn't listen. Try again.";
+        renderLearn();
+      });
+    };
+    const mh=$("#mHear"); if(mh) mh.onclick=()=>say(it.t);
+    const msh=$("#mShow"); if(msh) msh.onclick=()=>{ if(ms.kind!=="recall"){ advance(); return; } ms.status="revealed"; renderLearn(); say(it.t); };
+    const mo=$("#mOk"); if(mo) mo.onclick=good;
+    const mn=$("#mNext"); if(mn) mn.onclick=advance;
+  }
   const tc=$("#toCards"); if(tc) tc.onclick=()=>{ LS=null; show("cards"); };
   const th=$("#toHome"); if(th) th.onclick=()=>{ LS=null; renderLearn(); window.scrollTo(0,0); };
 }
@@ -1086,7 +1153,7 @@ function finishLesson(){
   L.w.forEach(id=>{ if(!BYID[id]) return; S.deck[id]=true;
     ["normal","speak"].forEach(m=>{ if(!S.srs[m][id]) S.srs[m][id]={int:0,ease:2.5,reps:0,due:now}; }); });
   S.lessons[LS.i]=today(); save(); resetQueues();
-  LS.step=5; renderLearn(); window.scrollTo(0,0);
+  LS.step=DONE_STEP; renderLearn(); window.scrollTo(0,0);
 }
 
 /* ---------- Alphabet ---------- */
