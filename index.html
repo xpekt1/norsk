@@ -732,6 +732,24 @@ const LESSONS=[
     {q:"\"Jeg vet ikke\" means…",o:["I don't know.","I don't see.","I don't want to.","I won't."],a:0,e:["Correct. vite → vet (irregular).","That's jeg ser ikke.","That's jeg vil ikke.","That's jeg vil ikke / skal ikke."],k:"vite → vet. One of the few irregular verbs."}],
  task:"Plan the weekend in Norwegian: Vi skal …, jeg vil …, vi må …"}
 ];
+/* Per grammar question: [Norwegian spoken when answering, example sentence, its English] */
+const GQA=[
+ [["Å. År.","Jeg har bodd her i ett år.","I have lived here for one year."],["Ha det!","Ha det, vi ses i morgen!","Bye, see you tomorrow!"]],
+ [["Hun er trøtt.","Vi er i Japan.","We are in Japan."],["De.","De kommer i kveld.","They are coming tonight."]],
+ [["Jeg forstår ikke.","Jeg snakker ikke norsk.","I don't speak Norwegian."],["Kan du snakke saktere?","Kan du hjelpe meg?","Can you help me?"]],
+ [["Hvor bor du?","Hva heter du?","What is your name?"],["Snakker du norsk?","Kommer du i morgen?","Are you coming tomorrow?"]],
+ [["Klokka er fire.","Klokka er åtte.","It's eight o'clock."],["Sju.","Det er sju dager i en uke.","There are seven days in a week."]],
+ [["Et barn.","De har to barn.","They have two children."],["Søsteren min.","Søsteren min bor i Bergen.","My sister lives in Bergen."]],
+ [["Han jobber i Tokyo.","Jeg bor i Tokyo.","I live in Tokyo."],["Har.","Jeg har en katt.","I have a cat."]],
+ [["Kan jeg få en kaffe?","Kan jeg få vann, takk?","Can I have water, please?"],["Brunost.","Brunost er en norsk ost.","Brown cheese is a Norwegian cheese."]],
+ [["I dag lager jeg middag.","Til frokost drikker vi te.","For breakfast we drink tea."],["Jeg liker deg.","Jeg liker kaffe.","I like coffee."]],
+ [["I går var jeg trøtt.","I går var jeg syk.","Yesterday I was sick."],["I morgen.","Vi ses i morgen.","See you tomorrow."]],
+ [["Et stort hus.","Det er et stort hus.","It's a big house."],["Det er kaldt ute.","Det er fint i dag.","It's nice today."]],
+ [["Jeg er glad i deg.","Det var koselig!","That was really nice!"],["Aldri.","Jeg har aldri vært i Norge.","I have never been to Norway."]],
+ [["Døren.","Lukk døren, er du snill.","Close the door, please."],["Rommet.","Rommet mitt er lite.","My room is small."]],
+ [["Vi er på hytta.","Vi går tur på fjellet.","We go hiking in the mountains."],["Jeg bor i Bergen.","Bergen er en vakker by.","Bergen is a beautiful city."]],
+ [["Jeg må gå nå.","Jeg må kjøpe melk.","I have to buy milk."],["Jeg vet ikke.","Jeg vet ikke hvor han bor.","I don't know where he lives."]]
+];
 let LS=null; /* active lesson state */
 function lessonIndex(){ return LESSONS.findIndex((l,i)=>!S.lessons[i]); }
 function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
@@ -742,17 +760,19 @@ function buildQuiz(L){
     const opts=shuffle([w,...shuffle(pool.filter(x=>x.id!==w.id)).slice(0,3)]);
     const toNo=i%2===0;
     return {q:toNo?`How do you say "${w.en}" in Norwegian?`:`What does "${w.no}" mean?`,say:toNo?null:w.no,
-      o:opts.map(x=>toNo?x.no:x.en),a:opts.indexOf(w),e:opts.map(x=>x.id===w.id?`Correct. ${x.no} = ${x.en}`:`${x.no} = ${x.en}`),
-      k:w.s?`${w.s} (${w.se})`:"",ks:w.s||""};
+      o:opts.map(x=>toNo?x.no:x.en),a:opts.indexOf(w),ow:opts,n:w.no,
+      e:opts.map(x=>x.id===w.id?`Correct. ${x.no} = ${x.en}`:`${x.no} = ${x.en}`),
+      k:`${w.no} = ${w.en}`,ks:w.s||"",kse:w.se||""};
   });
-  return [...vocab,...L.q.map(x=>Object.assign({},x))];
+  return [...vocab,...L.q.map((x,j)=>{ const a=(GQA[LESSONS.indexOf(L)]||[])[j]||[]; return Object.assign({},x,{n:a[0],ks:a[1],kse:a[2]}); })];
 }
 const STEP_NAMES=["New words","Grammar","Quiz","Speak","Together"];
 function startLesson(i){
   const L=LESSONS[i];
   const speakIds=shuffle(L.w.filter(id=>BYID[id])).slice(0,3);
-  LS={i,step:0,quiz:buildQuiz(L),qi:0,picked:null,wrong:0,sp:{ids:speakIds,k:0,status:"idle",tries:0,heard:""}};
+  LS={i,step:0,wi:0,quiz:buildQuiz(L),qi:0,picked:null,wrong:0,sp:{ids:speakIds,k:0,status:"idle",tries:0,heard:""}};
   renderLearn(); window.scrollTo(0,0);
+  const w0=BYID[L.w[0]]; if(w0) say(w0.no);
 }
 function renderLearn(){
   const el=$("#tab-learn");
@@ -795,9 +815,18 @@ function lessonHome(){
 function bindLessonHome(){ document.querySelectorAll("[data-start]").forEach(b=>b.onclick=()=>startLesson(+b.dataset.start)); }
 function nextBtn(label){ return `<button class="big primary" id="stepNext">${label}</button>`; }
 function stepWords(L){
-  return `<p class="note">Tap 🔊 to hear each word and sentence. Repeat each one out loud twice.</p><div class="wl">${L.w.map(id=>BYID[id]).filter(Boolean).map(w=>`
-    <div class="wcard"><div class="top"><b>${esc(w.no)}</b>${sayBtn(w.no)}<span>${esc(w.en)}</span></div>
-    ${w.s?`<div class="ex">${esc(w.s)} ${sayBtn(w.s)} <i>${esc(w.se)}</i></div>`:""}</div>`).join("")}</div>${nextBtn("Next: grammar")}`;
+  const ws=L.w.map(id=>BYID[id]).filter(Boolean), w=ws[LS.wi], last=LS.wi===ws.length-1;
+  return `<div class="note">Word ${LS.wi+1} of ${ws.length} · listen, then say it out loud twice</div>
+  <div class="card" style="gap:12px">
+    <div class="answer">${esc(w.no)}</div>
+    <button class="say" data-say="${esc(w.no)}" style="padding:10px 20px;font-size:1rem">${ICON_SPK} Hear the word</button>
+    <div class="prompt" style="font-size:1.3rem;color:var(--muted)">${esc(w.en)}</div>
+    ${w.s?`<div class="sent"><div class="no">${esc(w.s)} ${sayBtn(w.s)}</div><div class="en">${esc(w.se)}</div></div>`:""}
+  </div>
+  <div class="row" style="flex-wrap:nowrap;gap:8px">
+    ${LS.wi>0?`<button class="big" id="wPrev" style="flex:1">← Back</button>`:""}
+    <button class="big primary" id="wNext" style="flex:2">${last?"Next: grammar":"Next word →"}</button>
+  </div>`;
 }
 function stepGrammar(L){
   return `<div class="gram"><h3>${esc(L.g.h)}</h3><p>${esc(L.g.p)}</p>
@@ -810,12 +839,15 @@ function stepQuiz(){
   q.o.forEach((o,i)=>{
     const cls=ans?(i===q.a?"ok":i===LS.picked?"bad":""):"";
     const mark=ans?(i===q.a?" ✅":i===LS.picked?" ✗":""):"";
-    h+=`<button class="opt ${cls}" data-opt="${i}" ${ans?"disabled":""}><span class="nb">${i+1}</span>
-      <span class="ot"><b>${esc(o)}${mark}</b>${ans?`<span class="oe">${esc(q.e[i])}</span>`:""}</span></button>`;
+    const ow=q.ow&&q.ow[i];
+    const sent=ans&&ow&&ow.s?`<span class="oe" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">${sayBtn(ow.s)}<span style="color:var(--fg)">${esc(ow.s)}</span> ${esc(ow.se)}</span>`:"";
+    h+=`<div class="opt ${cls}" ${ans?"":`role="button" tabindex="0" data-opt="${i}"`} style="cursor:${ans?"default":"pointer"}"><span class="nb">${i+1}</span>
+      <span class="ot"><b>${esc(o)}${mark}</b>${ans?`<span class="oe">${esc(q.e[i])}</span>${sent}`:""}</span></div>`;
   });
   h+=`</div>`;
   if(ans){
-    if(q.k) h+=`<div class="key">💡 <b>Key point:</b> ${esc(q.k)} ${q.ks?sayBtn(q.ks):""}</div>`;
+    if(q.k||q.ks) h+=`<div class="key">💡 <b>Key point:</b> ${esc(q.k||"")}
+      ${q.ks?`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px">${sayBtn(q.ks)}<b>${esc(q.ks)}</b><span class="note">${esc(q.kse||"")}</span></div>`:""}</div>`;
     h+=nextBtn(LS.qi+1<LS.quiz.length?"Next question":"Next: speak");
   }
   return h;
@@ -855,8 +887,16 @@ function bindStep(){
     if(LS.step===4){ finishLesson(); return; }
     LS.step++; LS.picked=null; renderLearn(); window.scrollTo(0,0);
   };
-  document.querySelectorAll("[data-opt]").forEach(b=>b.onclick=()=>{
+  const ws=LESSONS[LS.i]?LESSONS[LS.i].w.map(id=>BYID[id]).filter(Boolean):[];
+  const wn=$("#wNext"); if(wn) wn.onclick=()=>{
+    if(LS.wi<ws.length-1){ LS.wi++; renderLearn(); say(ws[LS.wi].no); }
+    else { LS.step=1; renderLearn(); window.scrollTo(0,0); }
+  };
+  const wp=$("#wPrev"); if(wp) wp.onclick=()=>{ LS.wi--; renderLearn(); say(ws[LS.wi].no); };
+  document.querySelectorAll("[data-opt]").forEach(b=>b.onclick=b.onkeydown=e=>{
+    if(e.type==="keydown"&&e.key!=="Enter"&&e.key!==" ") return;
     const i=+b.dataset.opt, q=LS.quiz[LS.qi]; LS.picked=i;
+    if(q.n) say(q.n);
     if(i!==q.a && !q.retry){ LS.quiz.push(Object.assign({},q,{retry:true})); }
     renderLearn();
   });
