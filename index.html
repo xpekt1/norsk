@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Norsk Ordkort</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: one narrow column, tab bar on top, a single card in the centre of each study screen */
+:root{
+  --bg:#0e141b;          /* winter night */
+  --surface:#161f29;
+  --surface-2:#1e2935;
+  --line:#2a3846;
+  --fg:#e7edf2;
+  --muted:#8fa0b1;
+  --accent:#e8676b;      /* flag red, softened */
+  --blue:#6f9fd6;        /* flag blue, lifted for dark */
+  --good:#4fbf8a;
+  --bad:#e5534b;
+  --warn:#d9a94a;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font:16px/1.5 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:env(safe-area-inset-top,0px) calc(32px + env(safe-area-inset-bottom,0px));}
+[hidden]{display:none!important}
+.wrap{max-width:560px;margin:0 auto}
+button,select,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-block:18px 10px}
+.brand{font-family:var(--display);font-weight:700;font-size:1.6rem;letter-spacing:-.01em;margin:0}
+.brand span{color:var(--accent)}
+.voicewarn{font-size:.8rem;color:var(--warn)}
+
+nav{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:16px}
+nav button{background:none;border:0;border-radius:9px;padding:9px 4px;color:var(--muted);font-weight:700;font-size:.92rem}
+nav button[aria-selected="true"]{background:var(--surface-2);color:var(--fg)}
+nav small{display:block;font-weight:400;font-size:.7rem;opacity:.75}
+
+.stats{display:flex;gap:14px;flex-wrap:wrap;font-size:.85rem;color:var(--muted);margin-bottom:12px;font-variant-numeric:tabular-nums}
+.stats b{color:var(--fg)}
+.stats .due b{color:var(--blue)} .stats .new b{color:var(--accent)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:.85rem;color:var(--muted)}
+.chip[aria-pressed="true"]{border-color:var(--blue);color:var(--fg);background:var(--surface-2)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:28px 20px;min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;margin-top:12px;position:relative}
+.card.tap{cursor:pointer}
+.card.right{border-color:var(--good);box-shadow:0 0 0 1px var(--good) inset}
+.card.wrong{border-color:var(--bad);box-shadow:0 0 0 1px var(--bad) inset}
+.cat{position:absolute;top:12px;left:16px;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.prompt{font-family:var(--display);font-weight:500;font-size:clamp(1.5rem,6vw,2rem);line-height:1.2;text-wrap:balance}
+.answer{font-family:var(--display);font-weight:700;font-size:clamp(1.9rem,8vw,2.6rem);line-height:1.1;color:var(--fg)}
+.hint{color:var(--muted);font-size:.9rem}
+.sent{border-top:1px solid var(--line);padding-top:12px;margin-top:6px;width:100%;display:grid;gap:2px}
+.sent .no{font-size:1.05rem}
+.sent .en{color:var(--muted);font-size:.9rem}
+.say{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:.85rem;color:var(--fg);vertical-align:middle}
+.say svg{width:16px;height:16px}
+
+.grades{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.grades button{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 4px;font-weight:700}
+.grades small{display:block;font-weight:400;color:var(--muted);font-size:.75rem;font-variant-numeric:tabular-nums}
+.g1{color:var(--bad)} .g2{color:var(--warn)} .g3{color:var(--good)} .g4{color:var(--blue)}
+.big{width:100%;margin-top:12px;padding:14px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);font-weight:700}
+.primary{background:var(--accent);border-color:var(--accent);color:#1a0d0e}
+
+.mic{width:96px;height:96px;border-radius:50%;border:0;background:var(--accent);color:#1a0d0e;display:grid;place-items:center;margin:8px auto 0;transition:transform .15s}
+.mic svg{width:40px;height:40px}
+.mic.on{animation:pulse 1.1s ease-in-out infinite;background:var(--blue)}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(111,159,214,.5)}50%{box-shadow:0 0 0 16px rgba(111,159,214,0)}}
+@media (prefers-reduced-motion:reduce){.mic.on{animation:none}}
+.heard{font-size:.95rem;min-height:1.5em}
+.heard b{font-weight:700}
+.verdict{font-weight:700}
+.verdict.ok{color:var(--good)} .verdict.no{color:var(--bad)}
+.tries{font-size:.8rem;color:var(--muted)}
+.smallbtns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+.link{background:none;border:0;color:var(--blue);text-decoration:underline;padding:4px;font-size:.9rem}
+
+.list{display:grid;gap:6px;margin-top:12px}
+.item{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.item input{width:20px;height:20px;accent-color:var(--accent)}
+.item .w{min-width:0}
+.item .w b{display:block}
+.item .w span{color:var(--muted);font-size:.85rem}
+.item .st{font-size:.72rem;color:var(--muted);display:block}
+.item .act{display:flex;gap:6px;align-items:center}
+.iconbtn{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;width:34px;height:34px;display:grid;place-items:center;color:var(--fg)}
+.iconbtn svg{width:16px;height:16px}
+
+h2{font-family:var(--display);font-size:1.15rem;margin:22px 0 8px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:12px}
+label{display:grid;gap:4px;font-size:.88rem;color:var(--muted)}
+input[type=text],select,textarea{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 10px;width:100%}
+input[type=range]{width:100%;accent-color:var(--accent)}
+details summary{cursor:pointer;font-weight:700;padding:6px 0}
+.note{font-size:.85rem;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--surface-2);border:1px solid var(--line);padding:10px 16px;border-radius:10px;font-size:.9rem;z-index:20}
+.empty{color:var(--muted);text-align:center}
+.letters{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:6px;margin-top:12px}
+.letters button{aspect-ratio:1;max-width:100%;border:1px solid var(--line);background:var(--surface);border-radius:12px;font-family:var(--display);font-weight:700;font-size:1.5rem;transition:transform .12s,background .12s}
+.letters button.ext{color:var(--accent)}
+.letters button.lit{background:var(--blue);border-color:var(--blue);color:#0e141b;transform:scale(1.08)}
+.lyrics{display:grid;gap:4px;margin-top:14px;font-size:1.05rem}
+.lyrics span{color:var(--muted);transition:color .1s}
+.lyrics span.lit{color:var(--fg);font-weight:700}
+.snd{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
+.snd .L{font-family:var(--display);font-weight:700;font-size:2.4rem;line-height:1;text-align:center;background:none;border:0;color:var(--fg);padding:4px 0}
+.snd .L.ext{color:var(--accent)}
+.snd .d{min-width:0;display:grid;gap:4px}
+.snd .d .nm{font-size:.85rem;color:var(--muted)}
+.snd .d .ex{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1 class="brand">Norsk <span>Ordkort</span></h1>
+  <span class="voicewarn" id="voiceWarn" hidden>No Norwegian voice found</span>
+</header>
+
+<nav role="tablist">
+  <button role="tab" data-tab="cards" aria-selected="true">Kort<small>Cards</small></button>
+  <button role="tab" data-tab="speak" aria-selected="false">Snakk<small>Speak</small></button>
+  <button role="tab" data-tab="abc" aria-selected="false">ABC<small>Alphabet</small></button>
+  <button role="tab" data-tab="words" aria-selected="false">Ord<small>Words</small></button>
+  <button role="tab" data-tab="settings" aria-selected="false">Mer<small>Settings</small></button>
+</nav>
+
+<section id="tab-cards"></section>
+<section id="tab-speak" hidden></section>
+<section id="tab-abc" hidden></section>
+<section id="tab-words" hidden></section>
+<section id="tab-settings" hidden></section>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* ---------- Word list (Bokmål) ---------- */
+const DATA = {
+"Basics":[
+ ["hei","hi","Hei, hvordan går det?","Hi, how are you?"],
+ ["takk","thank you","Takk for maten.","Thanks for the food."],
+ ["ja","yes","Ja, det er riktig.","Yes, that's right."],
+ ["nei","no","Nei, jeg vil ikke.","No, I don't want to."],
+ ["unnskyld","sorry / excuse me","Unnskyld, hvor er toalettet?","Excuse me, where is the toilet?"],
+ ["ha det","bye","Ha det, vi ses i morgen!","Bye, see you tomorrow!"],
+ ["god morgen","good morning","God morgen, sov du godt?","Good morning, did you sleep well?"],
+ ["god natt","good night","God natt, sov godt.","Good night, sleep well."],
+ ["vær så snill","please","Kan du hjelpe meg, vær så snill?","Can you help me, please?"],
+ ["velkommen","welcome","Velkommen til Norge!","Welcome to Norway!"]
+],
+"Pronouns":[
+ ["jeg","I","Jeg er fra Kina.","I am from China."],
+ ["du","you","Du snakker godt norsk.","You speak Norwegian well."],
+ ["han","he","Han bor i Oslo.","He lives in Oslo."],
+ ["hun","she","Hun liker kaffe.","She likes coffee."],
+ ["vi","we","Vi skal spise nå.","We are going to eat now."],
+ ["de","they","De kommer i kveld.","They are coming tonight."]
+],
+"People":[
+ ["en mamma","mum","Mamma lager middag.","Mum is making dinner."],
+ ["en pappa","dad","Pappa jobber i dag.","Dad is working today."],
+ ["en familie","family","Familien min er stor.","My family is big."],
+ ["en venn","friend","Han er min beste venn.","He is my best friend."],
+ ["en kjæreste","boyfriend / girlfriend","Kjæresten min er norsk.","My boyfriend is Norwegian."],
+ ["et barn","child / children","De har to barn.","They have two children."],
+ ["en bror","brother","Broren min heter Erik.","My brother is called Erik."],
+ ["en søster","sister","Søsteren min bor i Bergen.","My sister lives in Bergen."]
+],
+"Verbs":[
+ ["å være","to be","Jeg er trøtt.","I am tired."],
+ ["å ha","to have","Jeg har en katt.","I have a cat."],
+ ["å gå","to walk / go","Vi går til butikken.","We walk to the shop."],
+ ["å komme","to come","Kommer du i morgen?","Are you coming tomorrow?"],
+ ["å spise","to eat","Hva vil du spise?","What do you want to eat?"],
+ ["å drikke","to drink","Jeg drikker te hver morgen.","I drink tea every morning."],
+ ["å snakke","to speak","Hun snakker tre språk.","She speaks three languages."],
+ ["å forstå","to understand","Jeg forstår ikke.","I don't understand."],
+ ["å like","to like","Jeg liker deg.","I like you."],
+ ["å vite","to know (a fact)","Jeg vet ikke.","I don't know."],
+ ["å kunne","can / be able to","Kan du snakke saktere?","Can you speak more slowly?"],
+ ["å ville","to want","Jeg vil reise til Norge.","I want to travel to Norway."],
+ ["å sove","to sleep","Babyen sover nå.","The baby is sleeping now."],
+ ["å jobbe","to work","Jeg jobber i Tokyo.","I work in Tokyo."],
+ ["å bo","to live (somewhere)","Vi bor i Japan.","We live in Japan."],
+ ["å se","to see / watch","Skal vi se en film?","Shall we watch a film?"],
+ ["å høre","to hear","Hører du meg?","Can you hear me?"],
+ ["å lese","to read","Jeg leser en bok.","I am reading a book."],
+ ["å skrive","to write","Kan du skrive det ned?","Can you write it down?"],
+ ["å kjøpe","to buy","Jeg må kjøpe melk.","I have to buy milk."],
+ ["å lage","to make","Jeg lager mat.","I am cooking."],
+ ["å elske","to love","Jeg elsker deg.","I love you."],
+ ["å hjelpe","to help","Kan jeg hjelpe deg?","Can I help you?"],
+ ["å trenge","to need","Jeg trenger en pause.","I need a break."],
+ ["å glemme","to forget","Jeg glemte nøkkelen.","I forgot the key."]
+],
+"Food":[
+ ["en mat","food","Norsk mat er godt.","Norwegian food is good."],
+ ["et vann","water","Kan jeg få et glass vann?","Can I have a glass of water?"],
+ ["en kaffe","coffee","Vil du ha en kopp kaffe?","Do you want a cup of coffee?"],
+ ["en te","tea","Jeg drikker grønn te.","I drink green tea."],
+ ["et brød","bread","Vi spiser brød til frokost.","We eat bread for breakfast."],
+ ["en ost","cheese","Brunost er en norsk ost.","Brown cheese is a Norwegian cheese."],
+ ["en fisk","fish","Laks er en populær fisk.","Salmon is a popular fish."],
+ ["et egg","egg","Jeg spiser to egg.","I am eating two eggs."],
+ ["en melk","milk","Vi har ikke mer melk.","We have no more milk."],
+ ["en frokost","breakfast","Frokosten er klar.","Breakfast is ready."],
+ ["en middag","dinner","Hva skal vi ha til middag?","What are we having for dinner?"],
+ ["et eple","apple","Hun spiser et eple.","She is eating an apple."]
+],
+"Home & places":[
+ ["et hus","house","Huset er rødt.","The house is red."],
+ ["et rom","room","Rommet mitt er lite.","My room is small."],
+ ["en dør","door","Lukk døren, er du snill.","Close the door, please."],
+ ["en bil","car","Vi kjører bil til hytta.","We drive to the cabin."],
+ ["en hytte","cabin","Familien har en hytte på fjellet.","The family has a cabin in the mountains."],
+ ["en seng","bed","Jeg går til sengs nå.","I'm going to bed now."],
+ ["en telefon","phone","Telefonen min er tom for strøm.","My phone is out of battery."],
+ ["penger","money","Jeg har ikke penger.","I don't have any money."],
+ ["en butikk","shop","Butikken stenger klokka ni.","The shop closes at nine."],
+ ["en by","city / town","Bergen er en vakker by.","Bergen is a beautiful city."],
+ ["et land","country","Norge er et kaldt land.","Norway is a cold country."],
+ ["et fjell","mountain","Vi går tur på fjellet.","We go hiking in the mountains."],
+ ["en tur","trip / walk","Skal vi gå en tur?","Shall we go for a walk?"],
+ ["en snø","snow","Det er mye snø i vinter.","There is a lot of snow this winter."]
+],
+"Time":[
+ ["i dag","today","Hva gjør du i dag?","What are you doing today?"],
+ ["i morgen","tomorrow","Vi ses i morgen.","See you tomorrow."],
+ ["i går","yesterday","Jeg var syk i går.","I was sick yesterday."],
+ ["nå","now","Jeg må gå nå.","I have to go now."],
+ ["en dag","day","Ha en fin dag!","Have a nice day!"],
+ ["en uke","week","Vi ses neste uke.","See you next week."],
+ ["et år","year","Jeg har bodd her i ett år.","I have lived here for one year."],
+ ["en kveld","evening","Hva skal du i kveld?","What are you doing this evening?"],
+ ["alltid","always","Han er alltid sen.","He is always late."],
+ ["aldri","never","Jeg har aldri vært i Norge.","I have never been to Norway."]
+],
+"Adjectives":[
+ ["god","good","Maten er god.","The food is good."],
+ ["stor","big","Det er et stort hus.","It's a big house."],
+ ["liten","small","Hunden er liten.","The dog is small."],
+ ["kald","cold","Det er kaldt ute.","It's cold outside."],
+ ["varm","warm / hot","Kaffen er varm.","The coffee is hot."],
+ ["fin","nice / pretty","For en fin dag!","What a nice day!"],
+ ["trøtt","tired","Jeg er så trøtt.","I'm so tired."],
+ ["sulten","hungry","Er du sulten?","Are you hungry?"],
+ ["glad","happy","Jeg er glad i deg.","I love you (warm, everyday)."],
+ ["ny","new","Jeg har en ny jobb.","I have a new job."],
+ ["gammel","old","Huset er gammelt.","The house is old."],
+ ["dyr","expensive","Norge er dyrt.","Norway is expensive."],
+ ["koselig","cosy / nice","Det var veldig koselig!","That was really nice!"]
+],
+"Questions":[
+ ["hva","what","Hva er det?","What is that?"],
+ ["hvem","who","Hvem er det?","Who is that?"],
+ ["hvor","where","Hvor bor du?","Where do you live?"],
+ ["når","when","Når kommer du?","When are you coming?"],
+ ["hvorfor","why","Hvorfor er du trist?","Why are you sad?"],
+ ["hvordan","how","Hvordan sier man det på norsk?","How do you say that in Norwegian?"],
+ ["hvor mye","how much","Hvor mye koster det?","How much does it cost?"]
+],
+"Numbers":[
+ ["en","one","Jeg har en bror.","I have one brother."],
+ ["to","two","Vi har to katter.","We have two cats."],
+ ["tre","three","Hun snakker tre språk.","She speaks three languages."],
+ ["fire","four","Klokka er fire.","It's four o'clock."],
+ ["fem","five","Det tar fem minutter.","It takes five minutes."],
+ ["seks","six","Jeg står opp klokka seks.","I get up at six."],
+ ["sju","seven","Det er sju dager i en uke.","There are seven days in a week."],
+ ["åtte","eight","Butikken åpner klokka åtte.","The shop opens at eight."],
+ ["ni","nine","Han er ni år gammel.","He is nine years old."],
+ ["ti","ten","Vi ses om ti minutter.","See you in ten minutes."]
+]};
+const ALTS = {"sju":["syv"],"en kjæreste":["kjæresten"]};
+const STARTER = ["Basics","Pronouns"];
+
+/* ---------- State ---------- */
+const KEY = "norsk-ordkort-v1";
+const DAY = 864e5;
+let S = load();
+function blank(){
+  return {deck:{}, srs:{normal:{},speak:{},sentence:{}}, custom:[], newToday:{date:"",normal:0,speak:0,sentence:0},
+    settings:{voice:"",rate:0.85,newPerDay:10,front:"en"}};
+}
+function load(){
+  let s=null;
+  try{ s=JSON.parse(localStorage.getItem(KEY)); }catch(e){}
+  if(!s){ s=blank(); seedStarter(s); }
+  const b=blank();
+  s.srs=Object.assign(b.srs,s.srs||{}); s.settings=Object.assign(b.settings,s.settings||{});
+  s.newToday=Object.assign(b.newToday,s.newToday||{}); s.custom=s.custom||[]; s.deck=s.deck||{};
+  return s;
+}
+function seedStarter(s){ for(const c of STARTER) for(const w of DATA[c]) s.deck[c+":"+w[0]]=true; }
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
+
+function allWords(){
+  const out=[];
+  for(const c in DATA) for(const w of DATA[c]) out.push({id:c+":"+w[0],no:w[0],en:w[1],s:w[2],se:w[3],c,alt:ALTS[w[0]]||[]});
+  for(const w of S.custom) out.push(Object.assign({c:"Mine",alt:[]},w));
+  return out;
+}
+let WORDS=allWords(), BYID={};
+function reindex(){ WORDS=allWords(); BYID={}; WORDS.forEach(w=>BYID[w.id]=w); }
+reindex();
+
+function today(){ const d=new Date(); return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate(); }
+function newCount(mode){ if(S.newToday.date!==today()){ S.newToday={date:today(),normal:0,speak:0,sentence:0}; } return S.newToday[mode]||0; }
+
+/* ---------- Scheduling (simple SM-2) ---------- */
+function grade(rec,g,now){
+  const r=Object.assign({int:0,ease:2.5,reps:0},rec||{});
+  if(g===1){ r.reps=0; r.int=0; r.ease=Math.max(1.3,r.ease-0.2); r.due=now+60e3; return r; }
+  if(r.reps===0){ if(g===2){ r.due=now+600e3; return r; } r.int=g===4?3:1; }
+  else if(r.reps===1){ r.int=g===2?2:g===3?3:6; }
+  else { r.int=g===2?r.int*1.2:g===3?r.int*r.ease:r.int*r.ease*1.3; }
+  if(g===2) r.ease=Math.max(1.3,r.ease-0.15);
+  if(g===4) r.ease+=0.15;
+  r.int=Math.max(1,Math.round(r.int*10)/10); r.reps++; r.due=now+r.int*DAY; return r;
+}
+function fmtGap(ms){
+  if(ms<3600e3) return Math.max(1,Math.round(ms/60e3))+" min";
+  if(ms<DAY) return Math.round(ms/3600e3)+" h";
+  const d=ms/DAY; if(d<30) return Math.round(d)+" d";
+  return (Math.round(d/30*10)/10)+" mo";
+}
+function deckIds(mode){
+  return Object.keys(S.deck).filter(id=>S.deck[id]&&BYID[id]&&(mode!=="sentence"||BYID[id].s));
+}
+function buildQueue(mode,extraNew=0){
+  const now=Date.now(), ids=deckIds(mode), rec=S.srs[mode];
+  const due=ids.filter(id=>rec[id]&&rec[id].due<=now).sort((a,b)=>rec[a].due-rec[b].due);
+  const room=Math.max(0,S.settings.newPerDay-newCount(mode))+extraNew;
+  const fresh=ids.filter(id=>!rec[id]).slice(0,room);
+  return [...due,...fresh];
+}
+function counts(mode){
+  const now=Date.now(), ids=deckIds(mode), rec=S.srs[mode];
+  return {due:ids.filter(id=>rec[id]&&rec[id].due<=now).length,
+          fresh:Math.min(ids.filter(id=>!rec[id]).length,Math.max(0,S.settings.newPerDay-newCount(mode))),
+          total:ids.length};
+}
+function applyGrade(mode,id,g){
+  const rec=S.srs[mode];
+  if(!rec[id]){ newCount(mode); S.newToday[mode]++; }
+  rec[id]=grade(rec[id],g,Date.now()); save();
+  return rec[id];
+}
+
+/* ---------- Audio (text-to-speech) ---------- */
+let current="cards";
+let voices=[];
+function loadVoices(){
+  if(!("speechSynthesis" in window)) return;
+  voices=speechSynthesis.getVoices().filter(v=>/^(nb|no|nn)\b/i.test(v.lang));
+  document.getElementById("voiceWarn").hidden=voices.length>0;
+  if(current==="settings") renderSettings();
+}
+if("speechSynthesis" in window){ loadVoices(); speechSynthesis.onvoiceschanged=loadVoices; }
+function say(text,onend){
+  if(!("speechSynthesis" in window)){ onend&&onend(); return; }
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text.replace(/^å /,""));
+  u.lang="nb-NO"; u.rate=S.settings.rate;
+  const v=voices.find(v=>v.name===S.settings.voice)||voices[0]; if(v) u.voice=v;
+  let done=false; const fin=()=>{ if(!done){done=true; onend&&onend();} };
+  u.onend=fin; u.onerror=fin; setTimeout(fin,6000);
+  speechSynthesis.speak(u);
+}
+const ICON_SPK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
+const ICON_MIC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>';
+const ICON_X='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+
+/* ---------- Speech recognition ---------- */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const DIGITS={"0":"null","1":"en","2":"to","3":"tre","4":"fire","5":"fem","6":"seks","7":"sju","8":"åtte","9":"ni","10":"ti"};
+function norm(s){
+  return s.toLowerCase().normalize("NFC").replace(/[.,!?¡¿"'()«»:;]/g," ").replace(/\b\d+\b/g,d=>DIGITS[d]||d).replace(/\s+/g," ").trim();
+}
+function stripLead(s){ return s.replace(/^(å|en|ei|et) (?=\S)/,""); }
+function lev(a,b){
+  const m=a.length,n=b.length; if(!m) return n; if(!n) return m;
+  let p=Array.from({length:n+1},(_,j)=>j);
+  for(let i=1;i<=m;i++){ const c=[i]; for(let j=1;j<=n;j++) c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1)); p=c; }
+  return p[n];
+}
+function sim(a,b){ return 1-lev(a,b)/Math.max(a.length,b.length,1); }
+function checkWord(alts,w){
+  const targets=[w.no,...w.alt].map(t=>stripLead(norm(t)));
+  let best={ok:false,score:0,heard:alts[0]||""};
+  for(const raw of alts){
+    const a=stripLead(norm(raw));
+    for(const t of targets){
+      if(a===t||(" "+a+" ").includes(" "+t+" ")) return {ok:true,score:1,heard:raw};
+      const sc=sim(a,t); if(sc>best.score) best={ok:sc>=0.8,score:sc,heard:raw};
+    }
+  }
+  return best;
+}
+function checkSentence(alts,w){
+  const t=norm(w.s).split(" ");
+  let best={ok:false,score:0,heard:alts[0]||""};
+  for(const raw of alts){
+    const a=norm(raw).split(" "); let hit=0;
+    for(const tok of t){ if(a.some(x=>x===tok||sim(x,tok)>=0.8)) hit++; }
+    const sc=hit/t.length; if(sc>best.score) best={ok:sc>=0.8,score:sc,heard:raw};
+  }
+  return best;
+}
+let rec=null;
+function listen(onres,onfail){
+  if(!SR){ onfail("unsupported"); return; }
+  if("speechSynthesis" in window) speechSynthesis.cancel();
+  try{ if(rec) rec.abort(); }catch(e){}
+  rec=new SR(); rec.lang="nb-NO"; rec.interimResults=false; rec.maxAlternatives=5; rec.continuous=false;
+  let got=false;
+  rec.onresult=e=>{ got=true; onres([...e.results[0]].map(r=>r.transcript)); };
+  rec.onerror=e=>{ got=true; onfail(e.error); };
+  rec.onend=()=>{ if(!got) onfail("no-speech"); };
+  try{ rec.start(); }catch(e){ onfail("start"); }
+}
+
+/* ---------- Helpers ---------- */
+const $=s=>document.querySelector(s);
+function esc(s){ return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(()=>t.hidden=true,2200); }
+function sayBtn(text,label){ return `<button class="say" data-say="${esc(text)}" aria-label="Play ${esc(text)}">${ICON_SPK}${label?esc(label):""}</button>`; }
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-say]"); if(b){ e.stopPropagation(); say(b.dataset.say); } });
+
+/* ---------- Tabs ---------- */
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>show(b.dataset.tab));
+function show(tab){
+  current=tab;
+  document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===tab));
+  ["cards","speak","abc","words","settings"].forEach(t=>$("#tab-"+t).hidden=t!==tab);
+  try{ if(rec) rec.abort(); }catch(e){}
+  if(tab!=="abc") stopSong();
+  ({cards:renderCards,speak:renderSpeak,abc:renderAbc,words:renderWords,settings:renderSettings})[tab]();
+}
+
+/* ---------- Normal cards ---------- */
+let N={queue:null,flipped:false,dir:null};
+function statsHtml(mode){
+  const c=counts(mode);
+  return `<div class="stats"><span class="due">Due <b>${c.due}</b></span><span class="new">New <b>${c.fresh}</b></span><span>In deck <b>${c.total}</b></span></div>`;
+}
+function doneHtml(mode){
+  const rec=S.srs[mode], ids=deckIds(mode);
+  const next=ids.map(id=>rec[id]&&rec[id].due).filter(Boolean).sort((a,b)=>a-b)[0];
+  const left=ids.filter(id=>!rec[id]).length;
+  return `<div class="card"><div class="prompt">Ferdig for i dag!</div>
+    <div class="hint">Done for today.${next?` Next review in ${fmtGap(next-Date.now())}.`:""}</div>
+    ${left?`<button class="big" data-more="${mode}">Learn 5 more new words (${left} left)</button>`:
+      `<div class="hint">Add more words in the <b>Words</b> tab.</div>`}</div>`;
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-more]"); if(!b) return;
+  const m=b.dataset.more;
+  if(m==="normal"){ N.queue=buildQueue("normal",5); renderCards(); }
+  else { SP.queue=buildQueue(m,5); SP.reset(); renderSpeak(); }
+});
+function renderCards(){
+  const el=$("#tab-cards");
+  if(!N.queue||!N.queue.length) N.queue=buildQueue("normal");
+  const front=S.settings.front;
+  let h=statsHtml("normal")+`<div class="row" role="group" aria-label="Front side">
+    <button class="chip" data-front="en" aria-pressed="${front==="en"}">English → Norsk</button>
+    <button class="chip" data-front="no" aria-pressed="${front==="no"}">Norsk → English</button>
+    <button class="chip" data-front="mix" aria-pressed="${front==="mix"}">Mixed</button></div>`;
+  if(!N.queue.length){ el.innerHTML=h+doneHtml("normal"); bindFront(); return; }
+  const id=N.queue[0], w=BYID[id];
+  if(!N.dir) N.dir=front==="mix"?(Math.random()<.5?"en":"no"):front;
+  const r=S.srs.normal[id];
+  const tag=!r?"New":r.reps===0?"Learning":"Review";
+  if(!N.flipped){
+    h+=`<div class="card tap" id="flip" role="button" tabindex="0" aria-label="Show answer"><span class="cat">${esc(w.c)} · ${tag}</span>
+      ${N.dir==="en"?`<div class="prompt">${esc(w.en)}</div><div class="hint">Say it out loud in Norwegian, then tap</div>`
+        :`<div class="answer">${esc(w.no)}</div>${sayBtn(w.no)}<div class="hint">What does it mean? Tap to check</div>`}
+    </div><button class="big" id="flipBtn">Show answer</button>`;
+  }else{
+    const now=Date.now(), lab=g=>{ const n=grade(r,g,now); return fmtGap(n.due-now); };
+    h+=`<div class="card"><span class="cat">${esc(w.c)} · ${tag}</span>
+      <div class="hint">${esc(w.en)}</div>
+      <div class="answer">${esc(w.no)}</div>${sayBtn(w.no)}
+      ${w.s?`<div class="sent"><div class="no">${esc(w.s)} ${sayBtn(w.s)}</div><div class="en">${esc(w.se)}</div></div>`:""}
+    </div>
+    <div class="grades">
+      <button class="g1" data-g="1">Again<small>${lab(1)}</small></button>
+      <button class="g2" data-g="2">Hard<small>${lab(2)}</small></button>
+      <button class="g3" data-g="3">Good<small>${lab(3)}</small></button>
+      <button class="g4" data-g="4">Easy<small>${lab(4)}</small></button>
+    </div>`;
+  }
+  el.innerHTML=h; bindFront();
+  const flip=()=>{ N.flipped=true; renderCards(); say(w.no); };
+  const f=$("#flip"); if(f){ f.onclick=flip; f.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();flip();} }; $("#flipBtn").onclick=flip; }
+  el.querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>{
+    const g=+b.dataset.g; applyGrade("normal",id,g); N.queue.shift();
+    if(g===1) N.queue.splice(Math.min(3,N.queue.length),0,id);
+    N.flipped=false; N.dir=null; renderCards();
+  });
+}
+function bindFront(){
+  document.querySelectorAll("[data-front]").forEach(b=>b.onclick=()=>{ S.settings.front=b.dataset.front; save(); N.dir=null; N.flipped=false; renderCards(); });
+}
+
+/* ---------- Speak mode ---------- */
+const SP={mode:"speak",queue:null,status:"idle",tries:0,hinted:false,heard:"",score:0,timer:null,
+  reset(){ this.status="idle"; this.tries=0; this.hinted=false; this.heard=""; this.score=0; clearTimeout(this.timer); }};
+function renderSpeak(){
+  const el=$("#tab-speak"), mode=SP.mode;
+  if(!SP.queue||!SP.queue.length) SP.queue=buildQueue(mode);
+  let h=statsHtml(mode)+`<div class="row" role="group" aria-label="What to say">
+    <button class="chip" data-spm="speak" aria-pressed="${mode==="speak"}">Words</button>
+    <button class="chip" data-spm="sentence" aria-pressed="${mode==="sentence"}">Sentences</button></div>`;
+  if(!SR){
+    h+=`<div class="card"><div class="prompt">Microphone checking isn't supported here</div>
+      <div class="hint">Open this file in <b>Chrome</b> (computer or Android) or <b>Safari</b> on iPhone/iPad. Normal cards still work everywhere.</div></div>`;
+    el.innerHTML=h; bindSpm(); return;
+  }
+  if(!SP.queue.length){ el.innerHTML=h+doneHtml(mode); bindSpm(); return; }
+  const id=SP.queue[0], w=BYID[id], sent=mode==="sentence";
+  const target=sent?w.s:w.no, prompt=sent?w.se:w.en;
+  const st=SP.status, cls=st==="right"?"right":(st==="wrong"||st==="revealed")?"wrong":"";
+  h+=`<div class="card ${cls}"><span class="cat">${esc(w.c)}${S.srs[mode][id]?"":" · New"}</span>
+    <div class="hint">Say in Norwegian</div>
+    <div class="prompt">${esc(prompt)}</div>
+    ${(st==="right"||st==="revealed")?`<div class="answer" style="font-size:${sent?"1.4rem":""}">${esc(target)}</div>${sayBtn(target)}`:""}
+    <div class="heard" aria-live="polite">${SP.heard?`Heard: <b>${esc(SP.heard)}</b>`:""}</div>
+    <div class="verdict ${st==="right"?"ok":"no"}" aria-live="polite">${
+      st==="right"?"Riktig! ✓":st==="wrong"?"Not quite. Try again ✗":st==="revealed"?"Here's the answer. It will come back soon.":st==="error"?esc(SP.err):""}</div>
+    ${(st!=="right"&&st!=="revealed")?`<button class="mic ${st==="listening"?"on":""}" id="micBtn" aria-label="${st==="listening"?"Listening":"Tap and speak"}">${ICON_MIC}</button>
+      <div class="tries">${st==="listening"?"Listening…":SP.tries?`Try ${SP.tries+1} of 3`:"Tap the mic and speak"}</div>
+      <div class="smallbtns">
+        <button class="link" id="hintBtn">Hear it</button>
+        <button class="link" id="revealBtn">Show answer</button>
+        ${SP.tries?`<button class="link" id="acceptBtn">I said it right</button>`:""}
+      </div>`:""}
+  </div>
+  ${(st==="right"||st==="revealed")?`<button class="big primary" id="nextBtn">Next</button>`:""}`;
+  el.innerHTML=h; bindSpm();
+  const mic=$("#micBtn");
+  if(mic) mic.onclick=()=>{
+    if(SP.status==="listening"){ try{rec.stop();}catch(e){} return; }
+    SP.status="listening"; SP.heard=""; renderSpeak();
+    listen(alts=>{
+      const res=sent?checkSentence(alts,w):checkWord(alts,w);
+      SP.heard=res.heard; SP.score=res.score;
+      if(res.ok) pass(id,w,target);
+      else { SP.tries++; SP.status="wrong"; if(SP.tries>=3) reveal(id,target); else renderSpeak(); }
+    },err=>{
+      SP.status="error";
+      SP.err=err==="not-allowed"||err==="service-not-allowed"?"Microphone blocked. Allow mic access for this page in the browser.":
+        err==="no-speech"?"Didn't hear anything. Tap the mic and speak a bit louder.":
+        err==="network"?"Speech checking needs an internet connection.":"Couldn't listen ("+err+"). Try again.";
+      renderSpeak();
+    });
+  };
+  const hb=$("#hintBtn"); if(hb) hb.onclick=()=>{ SP.hinted=true; say(target); };
+  const rb=$("#revealBtn"); if(rb) rb.onclick=()=>reveal(id,target);
+  const ab=$("#acceptBtn"); if(ab) ab.onclick=()=>pass(id,w,target);
+  const nb=$("#nextBtn"); if(nb) nb.onclick=next;
+}
+function pass(id,w,target){
+  SP.status="right";
+  applyGrade(SP.mode,id,(SP.hinted||SP.tries>0)?2:3);
+  renderSpeak();
+  say(target,()=>{ SP.timer=setTimeout(()=>{ if(SP.status==="right"&&current==="speak") next(); },700); });
+}
+function reveal(id,target){
+  SP.status="revealed"; applyGrade(SP.mode,id,1);
+  SP.queue.push(SP.queue[0]); /* comes back at the end of this session */
+  renderSpeak(); say(target);
+}
+function next(){ clearTimeout(SP.timer); SP.queue.shift(); SP.reset(); renderSpeak(); }
+function bindSpm(){
+  document.querySelectorAll("[data-spm]").forEach(b=>b.onclick=()=>{ SP.mode=b.dataset.spm; SP.queue=null; SP.reset(); renderSpeak(); });
+}
+
+/* ---------- Alphabet ---------- */
+/* [letter, name as spoken, sound hint, example word, meaning] */
+const ABC=[
+ ["A","a","Like \"a\" in father","far","father"],
+ ["B","be","Like English b","bil","car"],
+ ["C","se","Only in loanwords and names. Sounds like s or k","cola","cola"],
+ ["D","de","Like English d. Often silent at the end: god, rød","dag","day"],
+ ["E","e","Like \"e\" in bed, or \"ay\" in say when long","elg","moose"],
+ ["F","eff","Like English f","fisk","fish"],
+ ["G","ge","Hard g, but like \"y\" before i and y","gul","yellow"],
+ ["H","hå","Like English h. Silent before v and j: hva","hus","house"],
+ ["I","i","Like \"ee\" in see","is","ice"],
+ ["J","je","Like English y in yes","ja","yes"],
+ ["K","kå","Like k. Before i and y it softens toward \"sh\"","katt","cat"],
+ ["L","ell","Like English l","lys","light"],
+ ["M","emm","Like English m","mor","mother"],
+ ["N","enn","Like English n","natt","night"],
+ ["O","o","Usually like \"oo\" in moon, lips rounded","ost","cheese"],
+ ["P","pe","Like English p","pappa","dad"],
+ ["Q","ku","Only in names. Sounds like k","Quisling","(name)"],
+ ["R","ærr","Tapped like Spanish r (east), or from the throat (west and south)","rød","red"],
+ ["S","ess","Like s. sj, skj and sk + i/y sound like \"sh\": ski","sol","sun"],
+ ["T","te","Like English t","tog","train"],
+ ["U","u","No English match: say \"oo\" with tight, pushed-out lips","ut","out"],
+ ["V","ve","Like English v","vann","water"],
+ ["W","dobbelt-ve","Rare. Sounds like v","whisky","whisky"],
+ ["X","eks","Rare. Sounds like ks","taxi","taxi"],
+ ["Y","y","Say \"ee\" while rounding your lips","ny","new"],
+ ["Z","sett","Rare. Sounds like s","zoo","zoo"],
+ ["Æ","æ","Like \"a\" in cat","ærlig","honest"],
+ ["Ø","ø","Like \"i\" in bird (British), lips rounded","øye","eye"],
+ ["Å","å","Like \"aw\" in law","år","year"]
+];
+/* Melody: traditional "Twinkle, Twinkle" tune (public domain). Each step: [letter index or lyric id, midi note, beats] */
+const SONG=(()=>{
+  const C=60,D=62,E=64,F=65,G=67,A=69;
+  const L=(i,n,b=1)=>({l:i,n,b}), W=(t,n,b=1)=>({w:t,n,b});
+  return [
+   L(0,C),L(1,C),L(2,G),L(3,G),L(4,A),L(5,A),L(6,G,2),
+   L(7,F),L(8,F),L(9,E),L(10,E),L(11,D),L(12,D),L(13,C,2),
+   L(14,G),L(15,G),L(16,F),L(17,F),L(18,E),L(19,E),L(20,D,2),
+   L(21,G),L(22,G),L(23,F),L(24,F),L(25,E),L(26,E),L(27,D),L(28,D),
+   W("Nå",C),W("kan",C),W("jeg",G),W("mitt",G),W("al",A),W("fa",A),W("bet",G,2),
+   W("Syng",F),W("det",F),W("med",E),W("meg",E),W("en",D),W("gang",D),W("til!",C,2)
+  ];
+})();
+let AB={view:"sing",playing:false,voice:true,tempo:0.5,ctx:null,timers:[]};
+function renderAbc(){
+  const el=$("#tab-abc");
+  let h=`<div class="row" role="group" aria-label="Alphabet view">
+    <button class="chip" data-abv="sing" aria-pressed="${AB.view==="sing"}">Sing along</button>
+    <button class="chip" data-abv="sounds" aria-pressed="${AB.view==="sounds"}">Letter sounds</button></div>`;
+  if(AB.view==="sing"){
+    h+=`<p class="note">The melody plays and each letter lights up. Sing along! Tap any letter to hear its name. The red letters are the three extra Norwegian ones.</p>
+    <div class="letters">${ABC.map((a,i)=>`<button data-li="${i}" class="${i>25?"ext":""}" aria-label="${a[0]}, ${esc(a[1])}">${a[0]}</button>`).join("")}</div>
+    <div class="lyrics" aria-hidden="true">
+      <div>${SONG.filter(s=>s.w).slice(0,7).map((s,i)=>`<span data-wi="${i}">${s.w}${["al","fa"].includes(s.w)?"-":" "}</span>`).join("")}</div>
+      <div>${SONG.filter(s=>s.w).slice(7).map((s,i)=>`<span data-wi="${i+7}">${s.w} </span>`).join("")}</div>
+    </div>
+    <button class="big primary" id="singBtn">${AB.playing?"Stop":"Play the ABC song"}</button>
+    <div class="row" style="margin-top:10px">
+      <button class="chip" data-tempo="0.75" aria-pressed="${AB.tempo===0.75}">Slow</button>
+      <button class="chip" data-tempo="0.5" aria-pressed="${AB.tempo===0.5}">Normal</button>
+      <button class="chip" id="voiceTog" aria-pressed="${AB.voice}">Voice says the letters</button>
+    </div>
+    <p class="note">The computer voice can't really sing, so it speaks each letter on the beat. It's even better when you sing it together with her.</p>`;
+  }else{
+    h+=`<p class="note">Tap the big letter to hear its name. Tap the word to hear the sound in a real word.</p>
+    <div class="list">${ABC.map((a,i)=>`<div class="snd">
+      <button class="L ${i>25?"ext":""}" data-say="${esc(a[1])}" aria-label="Say ${a[0]}">${a[0]}</button>
+      <div class="d"><span class="nm">Name: <b>${esc(a[1])}</b></span>
+        <span>${esc(a[2])}</span>
+        <span class="ex">${sayBtn(a[3]," "+a[3])}<span class="note">${esc(a[4])}</span></span></div>
+    </div>`).join("")}</div>`;
+  }
+  el.innerHTML=h;
+  el.querySelectorAll("[data-abv]").forEach(b=>b.onclick=()=>{ stopSong(); AB.view=b.dataset.abv; renderAbc(); });
+  el.querySelectorAll("[data-li]").forEach(b=>b.onclick=()=>say(ABC[+b.dataset.li][1]));
+  el.querySelectorAll("[data-tempo]").forEach(b=>b.onclick=()=>{ AB.tempo=+b.dataset.tempo; const p=AB.playing; stopSong(); renderAbc(); if(p) playSong(); });
+  const vt=$("#voiceTog"); if(vt) vt.onclick=()=>{ AB.voice=!AB.voice; vt.setAttribute("aria-pressed",AB.voice); };
+  const sb=$("#singBtn"); if(sb) sb.onclick=()=>{ if(AB.playing){ stopSong(); renderAbc(); } else playSong(); };
+}
+function tone(ctx,midi,t,dur){
+  const o=ctx.createOscillator(), g=ctx.createGain();
+  o.type="triangle"; o.frequency.value=440*Math.pow(2,(midi-69)/12);
+  g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.22,t+0.02); g.gain.exponentialRampToValueAtTime(0.001,t+dur*0.95);
+  o.connect(g).connect(ctx.destination); o.start(t); o.stop(t+dur);
+}
+function playSong(){
+  const AC=window.AudioContext||window.webkitAudioContext; if(!AC){ toast("This browser can't play the melody"); return; }
+  AB.ctx=AB.ctx||new AC(); AB.ctx.resume();
+  AB.playing=true; renderAbc();
+  const ctx=AB.ctx, beat=AB.tempo; let t=ctx.currentTime+0.15, wi=0;
+  SONG.forEach(s=>{
+    const dur=s.b*beat; tone(ctx,s.n,t,dur);
+    const delay=(t-ctx.currentTime)*1000, myWi=s.w?wi++:-1;
+    AB.timers.push(setTimeout(()=>{
+      document.querySelectorAll(".lit").forEach(x=>x.classList.remove("lit"));
+      if(s.l!==undefined){
+        const b=document.querySelector(`[data-li="${s.l}"]`); if(b) b.classList.add("lit");
+        if(AB.voice && "speechSynthesis" in window){
+          speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(ABC[s.l][1]);
+          u.lang="nb-NO"; u.rate=1.15; const v=voices.find(v=>v.name===S.settings.voice)||voices[0]; if(v) u.voice=v; speechSynthesis.speak(u);
+        }
+      }else{ const w=document.querySelector(`[data-wi="${myWi}"]`); if(w) w.classList.add("lit"); }
+    },delay));
+    t+=dur;
+  });
+  AB.timers.push(setTimeout(()=>{ AB.playing=false; if(current==="abc") renderAbc(); },(t-ctx.currentTime)*1000+200));
+}
+function stopSong(){
+  AB.timers.forEach(clearTimeout); AB.timers=[]; AB.playing=false;
+  if(AB.ctx){ AB.ctx.close(); AB.ctx=null; }
+  if("speechSynthesis" in window) speechSynthesis.cancel();
+}
+
+/* ---------- Word bank ---------- */
+let WF="All";
+function status(id){
+  const n=S.srs.normal[id]; if(!n) return "new";
+  const d=n.due-Date.now(); return d<=0?"due now":"next in "+fmtGap(d);
+}
+function renderWords(){
+  const el=$("#tab-words");
+  const cats=["All",...Object.keys(DATA),...(S.custom.length?["Mine"]:[])];
+  const list=WORDS.filter(w=>WF==="All"||w.c===WF);
+  const inDeck=list.filter(w=>S.deck[w.id]).length;
+  let h=`<p class="note">Tick the words she has learned together with you. Ticked words go into both decks.</p>
+  <div class="row">${cats.map(c=>`<button class="chip" data-cat="${esc(c)}" aria-pressed="${WF===c}">${esc(c)}</button>`).join("")}</div>
+  <div class="row" style="margin-top:10px;justify-content:space-between">
+    <span class="note">${inDeck} of ${list.length} in deck</span>
+    <span class="row"><button class="chip" id="addAll">Add all</button><button class="chip" id="remAll">Remove all</button></span>
+  </div>
+  <div class="list">${list.map(w=>`<div class="item">
+    <input type="checkbox" id="ck-${esc(w.id)}" data-id="${esc(w.id)}" ${S.deck[w.id]?"checked":""} aria-label="In deck: ${esc(w.no)}">
+    <label class="w" for="ck-${esc(w.id)}" style="color:inherit;display:block"><b>${esc(w.no)}</b><span>${esc(w.en)}</span>${S.deck[w.id]?`<span class="st">${status(w.id)}</span>`:""}</label>
+    <span class="act">${sayBtn(w.no)}${w.c==="Mine"?`<button class="iconbtn" data-del="${esc(w.id)}" aria-label="Delete ${esc(w.no)}">${ICON_X}</button>`:""}</span>
+  </div>`).join("")}</div>
+  <h2>Add your own word</h2>
+  <form class="panel" id="addForm">
+    <label>Norwegian<input type="text" id="fNo" required placeholder="en katt"></label>
+    <label>English<input type="text" id="fEn" required placeholder="cat"></label>
+    <label>Example sentence (Norwegian, optional)<input type="text" id="fS" placeholder="Katten sover på sofaen."></label>
+    <label>Sentence in English (optional)<input type="text" id="fSe" placeholder="The cat is sleeping on the sofa."></label>
+    <button class="big primary" type="submit" style="margin-top:0">Add to deck</button>
+    <p class="note" style="margin:0">Tip: write nouns with en/ei/et so she learns the gender.</p>
+  </form>`;
+  el.innerHTML=h;
+  el.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>{ WF=b.dataset.cat; renderWords(); });
+  el.querySelectorAll("input[data-id]").forEach(c=>c.onchange=()=>{ if(c.checked) S.deck[c.dataset.id]=true; else delete S.deck[c.dataset.id]; save(); resetQueues(); renderWords(); });
+  $("#addAll").onclick=()=>{ list.forEach(w=>S.deck[w.id]=true); save(); resetQueues(); renderWords(); };
+  $("#remAll").onclick=()=>{ list.forEach(w=>delete S.deck[w.id]); save(); resetQueues(); renderWords(); };
+  el.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{
+    const id=b.dataset.del; S.custom=S.custom.filter(w=>w.id!==id); delete S.deck[id];
+    ["normal","speak","sentence"].forEach(m=>delete S.srs[m][id]); save(); reindex(); resetQueues(); renderWords();
+  });
+  $("#addForm").onsubmit=e=>{
+    e.preventDefault();
+    const no=$("#fNo").value.trim(), en=$("#fEn").value.trim(); if(!no||!en) return;
+    const id="Mine:"+no+":"+Date.now().toString(36);
+    S.custom.push({id,no,en,s:$("#fS").value.trim(),se:$("#fSe").value.trim()});
+    S.deck[id]=true; save(); reindex(); resetQueues(); WF="Mine"; renderWords(); toast("Added "+no);
+  };
+}
+function resetQueues(){ N.queue=null; N.flipped=false; N.dir=null; SP.queue=null; SP.reset(); }
+
+/* ---------- Settings ---------- */
+let confirmReset=false;
+function renderSettings(){
+  const el=$("#tab-settings"), st=S.settings;
+  el.innerHTML=`<h2 style="margin-top:0">Voice</h2>
+  <div class="panel">
+    ${voices.length?`<label>Norwegian voice<select id="sVoice">${voices.map(v=>`<option ${v.name===st.voice?"selected":""}>${esc(v.name)}</option>`).join("")}</select></label>`
+      :`<p class="note" style="margin:0">No Norwegian voice was found on this device. On iPhone: Settings → Accessibility → Spoken Content → Voices → Norwegian. On Android/Samsung: Settings → General management → Text-to-speech → set Preferred engine to Speech Recognition and Synthesis from Google → tap the gear → Install voice data → Norwegian (Norsk bokmål). Then restart Chrome. On Windows: Settings → Time &amp; language → Speech → add Norwegian.</p>`}
+    <label>Speed <span id="rateVal">${st.rate.toFixed(2)}×</span><input type="range" id="sRate" min="0.5" max="1.2" step="0.05" value="${st.rate}"></label>
+    <div>${sayBtn("Hei! Jeg heter Nora. Hvordan går det?"," Test voice")}</div>
+  </div>
+  <h2>Study</h2>
+  <div class="panel">
+    <label>New words per day (each deck)<input type="range" id="sNew" min="3" max="30" step="1" value="${st.newPerDay}"><span id="newVal">${st.newPerDay} words</span></label>
+  </div>
+  <h2>Backup</h2>
+  <div class="panel">
+    <p class="note" style="margin:0">Progress is saved in this browser only. Export a backup now and then, or to move to another device.</p>
+    <div class="row"><button class="chip" id="exp">Export backup</button>
+      <label class="chip" style="display:inline-block;color:var(--muted)">Import backup<input type="file" id="imp" accept=".json,application/json" hidden></label></div>
+    ${confirmReset?`<div class="row"><span class="note">Delete all progress and custom words?</span><button class="chip" id="rYes" style="border-color:var(--bad);color:var(--bad)">Yes, reset</button><button class="chip" id="rNo">Cancel</button></div>`
+      :`<button class="link" id="rst" style="justify-self:start;color:var(--bad)">Reset all progress</button>`}
+  </div>`;
+  const sv=$("#sVoice"); if(sv){ if(!st.voice&&voices[0]) st.voice=voices[0].name; sv.onchange=()=>{ st.voice=sv.value; save(); }; }
+  $("#sRate").oninput=e=>{ st.rate=+e.target.value; $("#rateVal").textContent=st.rate.toFixed(2)+"×"; save(); };
+  $("#sNew").oninput=e=>{ st.newPerDay=+e.target.value; $("#newVal").textContent=st.newPerDay+" words"; save(); resetQueues(); };
+  $("#exp").onclick=()=>{
+    const blob=new Blob([JSON.stringify(S,null,1)],{type:"application/json"});
+    const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="norsk-ordkort-backup-"+today()+".json";
+    document.body.appendChild(a); a.click(); a.remove(); toast("Backup saved");
+  };
+  $("#imp").onchange=e=>{
+    const f=e.target.files[0]; if(!f) return;
+    f.text().then(t=>{ const d=JSON.parse(t); if(!d.deck||!d.srs) throw 0; S=d; save(); S=load(); reindex(); resetQueues(); toast("Backup loaded"); renderSettings(); })
+     .catch(()=>toast("That file isn't a Norsk Ordkort backup"));
+  };
+  const r=$("#rst"); if(r) r.onclick=()=>{ confirmReset=true; renderSettings(); };
+  const y=$("#rYes"); if(y) y.onclick=()=>{ S=blank(); seedStarter(S); save(); reindex(); resetQueues(); confirmReset=false; renderSettings(); toast("Progress reset"); };
+  const n=$("#rNo"); if(n) n.onclick=()=>{ confirmReset=false; renderSettings(); };
+}
+
+renderCards();
+</script>
+</body>
+</html>
