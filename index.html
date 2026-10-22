@@ -1214,7 +1214,7 @@ function renderAbc(){
     h+=`<div class="note" style="margin-top:12px">Letter ${AB.li+1} of ${ABC.length} · listen, then say it out loud</div>
     <div class="card" style="gap:12px">
       <div class="answer" style="font-size:5rem;${ext?"color:var(--accent)":""}">${a[0]}<span style="font-size:.5em;color:var(--muted)"> ${a[0].toLowerCase()}</span></div>
-      <button class="say" data-say="${esc(a[0])}" style="padding:10px 20px;font-size:1rem">${ICON_SPK} Name: ${esc(a[1])}</button>
+      <button class="say" data-say="${esc(a[0].toLowerCase())}" style="padding:10px 20px;font-size:1rem">${ICON_SPK} Name: ${esc(a[1])}</button>
       <div class="hint" style="font-size:1rem;max-width:40ch">${esc(a[2])}</div>
       <div class="sent"><div class="no" style="display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap">Example: <b>${esc(a[3])}</b> ${sayBtn(a[3])}</div><div class="en">${esc(a[4])}</div></div>
     </div>
@@ -1239,17 +1239,17 @@ function renderAbc(){
   }else{
     h+=`<p class="note">Tap the big letter to hear its name. Tap the word to hear the sound in a real word.</p>
     <div class="list">${ABC.map((a,i)=>`<div class="snd">
-      <button class="L ${i>25?"ext":""}" data-say="${esc(a[0])}" aria-label="Say ${a[0]}">${a[0]}</button>
+      <button class="L ${i>25?"ext":""}" data-say="${esc(a[0].toLowerCase())}" aria-label="Say ${a[0]}">${a[0]}</button>
       <div class="d"><span class="nm">Name: <b>${esc(a[1])}</b></span>
         <span>${esc(a[2])}</span>
         <span class="ex">${sayBtn(a[3]," "+a[3])}<span class="note">${esc(a[4])}</span></span></div>
     </div>`).join("")}</div>`;
   }
   el.innerHTML=h;
-  el.querySelectorAll("[data-abv]").forEach(b=>b.onclick=()=>{ stopSong(); AB.view=b.dataset.abv; renderAbc(); if(AB.view==="one") say(ABC[AB.li][0]); });
-  const an=$("#abNext"); if(an) an.onclick=()=>{ AB.li=(AB.li+1)%ABC.length; renderAbc(); say(ABC[AB.li][0]); };
-  const ap=$("#abPrev"); if(ap) ap.onclick=()=>{ AB.li--; renderAbc(); say(ABC[AB.li][0]); };
-  el.querySelectorAll("[data-li]").forEach(b=>b.onclick=()=>say(ABC[+b.dataset.li][0]));
+  el.querySelectorAll("[data-abv]").forEach(b=>b.onclick=()=>{ stopSong(); AB.view=b.dataset.abv; renderAbc(); if(AB.view==="one") say(ABC[AB.li][0].toLowerCase()); });
+  const an=$("#abNext"); if(an) an.onclick=()=>{ AB.li=(AB.li+1)%ABC.length; renderAbc(); say(ABC[AB.li][0].toLowerCase()); };
+  const ap=$("#abPrev"); if(ap) ap.onclick=()=>{ AB.li--; renderAbc(); say(ABC[AB.li][0].toLowerCase()); };
+  el.querySelectorAll("[data-li]").forEach(b=>b.onclick=()=>say(ABC[+b.dataset.li][0].toLowerCase()));
   el.querySelectorAll("[data-tempo]").forEach(b=>b.onclick=()=>{ AB.tempo=+b.dataset.tempo; const p=AB.playing; stopSong(); renderAbc(); if(p) playSong(); });
   const vt=$("#voiceTog"); if(vt) vt.onclick=()=>{ AB.voice=!AB.voice; vt.setAttribute("aria-pressed",AB.voice); };
   const sb=$("#singBtn"); if(sb) sb.onclick=()=>{ if(AB.playing){ stopSong(); renderAbc(); } else playSong(); };
@@ -1273,7 +1273,7 @@ function playSong(){
       if(s.l!==undefined){
         const b=document.querySelector(`[data-li="${s.l}"]`); if(b) b.classList.add("lit");
         if(AB.voice && "speechSynthesis" in window){
-          speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(ABC[s.l][0]);
+          speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(ABC[s.l][0].toLowerCase());
           u.lang="nb-NO"; u.rate=1.15; const v=voices.find(v=>v.name===S.settings.voice)||voices[0]; if(v) u.voice=v; speechSynthesis.speak(u);
         }
       }else{ const w=document.querySelector(`[data-wi="${myWi}"]`); if(w) w.classList.add("lit"); }
