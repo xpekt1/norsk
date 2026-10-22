@@ -41,8 +41,8 @@ header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
 .brand span{color:var(--accent)}
 .voicewarn{font-size:.8rem;color:var(--warn)}
 
-nav{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:16px}
-nav button{background:none;border:0;border-radius:9px;padding:9px 4px;color:var(--muted);font-weight:700;font-size:.92rem}
+nav{display:grid;grid-template-columns:repeat(6,1fr);gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:16px}
+nav button{background:none;border:0;border-radius:9px;padding:9px 2px;color:var(--muted);font-weight:700;font-size:.9rem;min-width:0}
 nav button[aria-selected="true"]{background:var(--surface-2);color:var(--fg)}
 nav small{display:block;font-weight:400;font-size:.7rem;opacity:.75}
 
@@ -107,6 +107,53 @@ details summary{cursor:pointer;font-weight:700;padding:6px 0}
 .note{font-size:.85rem;color:var(--muted)}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--surface-2);border:1px solid var(--line);padding:10px 16px;border-radius:10px;font-size:.9rem;z-index:20}
 .empty{color:var(--muted);text-align:center}
+.today{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;display:grid;gap:6px;margin-top:4px}
+.today .eyebrow{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.today h2{margin:0;font-size:1.7rem;line-height:1.15;text-wrap:balance}
+.today .sub{color:var(--muted)}
+.lrow{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;text-align:left;width:100%}
+.lrow:disabled{opacity:.45;cursor:default}
+.lrow .num{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-family:var(--display);font-weight:700;background:var(--surface-2);font-variant-numeric:tabular-nums}
+.lrow.done .num{background:var(--good);color:#0e141b}
+.lrow.cur .num{background:var(--accent);color:#1a0d0e}
+.lrow .t{min-width:0}
+.lrow .t b{display:block}
+.lrow .t span{color:var(--muted);font-size:.85rem}
+.lrow .s{font-size:.8rem;color:var(--muted)}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:10px 0 4px}
+.steps span{height:5px;border-radius:3px;background:var(--line)}
+.steps span.on{background:var(--accent)}
+.steps span.past{background:var(--good)}
+.stepname{font-size:.8rem;color:var(--muted);margin-bottom:6px}
+.lhead{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.lhead h2{margin:0;font-size:1.25rem}
+.wl{display:grid;gap:6px}
+.wcard{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--good);border-radius:12px;padding:12px;display:grid;gap:4px}
+.wcard .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.wcard .top b{font-family:var(--display);font-size:1.35rem}
+.wcard .top span{color:var(--muted)}
+.wcard .ex{font-size:.92rem;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.wcard .ex i{color:var(--muted);font-style:normal}
+.gram{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:10px}
+.gram h3{font-family:var(--display);margin:0;font-size:1.25rem;text-wrap:balance}
+.gram p{margin:0;max-width:65ch}
+.gram .exs{display:grid;gap:8px}
+.gram .exs div{display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:8px}
+.gram .exs i{color:var(--muted);font-style:normal;font-size:.9rem}
+.qq{font-family:var(--display);font-size:1.3rem;margin:6px 0 10px;text-wrap:balance}
+.opts{display:grid;gap:8px}
+.opt{display:grid;grid-template-columns:36px 1fr;gap:12px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:left;width:100%}
+.opt .nb{width:36px;height:36px;border-radius:9px;display:grid;place-items:center;font-weight:700;color:#0e141b}
+.opt:nth-child(1) .nb{background:#6f9fd6}.opt:nth-child(2) .nb{background:#d9a94a}.opt:nth-child(3) .nb{background:#b58ad9}.opt:nth-child(4) .nb{background:#e8676b}
+.opt .ot{min-width:0;display:grid;gap:4px;padding-top:6px}
+.opt .ot b{font-weight:700}
+.opt .oe{font-size:.86rem;color:var(--muted)}
+.opt.ok{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opt.bad{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--surface))}
+.opt:disabled{cursor:default;color:var(--fg)}
+.key{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px;font-size:.92rem}
+.task{background:var(--surface);border:1px solid var(--accent);border-radius:14px;padding:18px;display:grid;gap:8px}
+.task p{margin:0;font-size:1.05rem}
 .letters{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:6px;margin-top:12px}
 .letters button{aspect-ratio:1;max-width:100%;border:1px solid var(--line);background:var(--surface);border-radius:12px;font-family:var(--display);font-weight:700;font-size:1.5rem;transition:transform .12s,background .12s}
 .letters button.ext{color:var(--accent)}
@@ -130,14 +177,16 @@ details summary{cursor:pointer;font-weight:700;padding:6px 0}
 </header>
 
 <nav role="tablist">
-  <button role="tab" data-tab="cards" aria-selected="true">Kort<small>Cards</small></button>
+  <button role="tab" data-tab="learn" aria-selected="true">Lær<small>Lessons</small></button>
+  <button role="tab" data-tab="cards" aria-selected="false">Kort<small>Cards</small></button>
   <button role="tab" data-tab="speak" aria-selected="false">Snakk<small>Speak</small></button>
   <button role="tab" data-tab="abc" aria-selected="false">ABC<small>Alphabet</small></button>
   <button role="tab" data-tab="words" aria-selected="false">Ord<small>Words</small></button>
   <button role="tab" data-tab="settings" aria-selected="false">Mer<small>Settings</small></button>
 </nav>
 
-<section id="tab-cards"></section>
+<section id="tab-learn"></section>
+<section id="tab-cards" hidden></section>
 <section id="tab-speak" hidden></section>
 <section id="tab-abc" hidden></section>
 <section id="tab-words" hidden></section>
@@ -291,16 +340,16 @@ const KEY = "norsk-ordkort-v1";
 const DAY = 864e5;
 let S = load();
 function blank(){
-  return {deck:{}, srs:{normal:{},speak:{},sentence:{}}, custom:[], newToday:{date:"",normal:0,speak:0,sentence:0},
+  return {lessons:{}, deck:{}, srs:{normal:{},speak:{},sentence:{}}, custom:[], newToday:{date:"",normal:0,speak:0,sentence:0},
     settings:{voice:"",rate:0.85,newPerDay:10,front:"en"}};
 }
 function load(){
   let s=null;
   try{ s=JSON.parse(localStorage.getItem(KEY)); }catch(e){}
-  if(!s){ s=blank(); seedStarter(s); }
+  if(!s){ s=blank(); }
   const b=blank();
   s.srs=Object.assign(b.srs,s.srs||{}); s.settings=Object.assign(b.settings,s.settings||{});
-  s.newToday=Object.assign(b.newToday,s.newToday||{}); s.custom=s.custom||[]; s.deck=s.deck||{};
+  s.newToday=Object.assign(b.newToday,s.newToday||{}); s.custom=s.custom||[]; s.deck=s.deck||{}; s.lessons=s.lessons||{};
   return s;
 }
 function seedStarter(s){ for(const c of STARTER) for(const w of DATA[c]) s.deck[c+":"+w[0]]=true; }
@@ -360,7 +409,7 @@ function applyGrade(mode,id,g){
 }
 
 /* ---------- Audio (text-to-speech) ---------- */
-let current="cards";
+let current="learn";
 let voices=[];
 function loadVoices(){
   if(!("speechSynthesis" in window)) return;
@@ -444,10 +493,10 @@ document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>show(b.dataset.
 function show(tab){
   current=tab;
   document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===tab));
-  ["cards","speak","abc","words","settings"].forEach(t=>$("#tab-"+t).hidden=t!==tab);
+  ["learn","cards","speak","abc","words","settings"].forEach(t=>$("#tab-"+t).hidden=t!==tab);
   try{ if(rec) rec.abort(); }catch(e){}
   if(tab!=="abc") stopSong();
-  ({cards:renderCards,speak:renderSpeak,abc:renderAbc,words:renderWords,settings:renderSettings})[tab]();
+  ({learn:renderLearn,cards:renderCards,speak:renderSpeak,abc:renderAbc,words:renderWords,settings:renderSettings})[tab]();
 }
 
 /* ---------- Normal cards ---------- */
@@ -463,7 +512,7 @@ function doneHtml(mode){
   return `<div class="card"><div class="prompt">Ferdig for i dag!</div>
     <div class="hint">Done for today.${next?` Next review in ${fmtGap(next-Date.now())}.`:""}</div>
     ${left?`<button class="big" data-more="${mode}">Learn 5 more new words (${left} left)</button>`:
-      `<div class="hint">Add more words in the <b>Words</b> tab.</div>`}</div>`;
+      (ids.length?`<div class="hint">Do the next lesson in <b>Lær</b> to add more words.</div>`:`<div class="hint">No words yet. Start with lesson 1 in <b>Lær</b>.</div>`)}</div>`;
 }
 document.addEventListener("click",e=>{
   const b=e.target.closest("[data-more]"); if(!b) return;
@@ -587,6 +636,257 @@ function reveal(id,target){
 function next(){ clearTimeout(SP.timer); SP.queue.shift(); SP.reset(); renderSpeak(); }
 function bindSpm(){
   document.querySelectorAll("[data-spm]").forEach(b=>b.onclick=()=>{ SP.mode=b.dataset.spm; SP.queue=null; SP.reset(); renderSpeak(); });
+}
+
+/* ---------- Curriculum ---------- */
+const B="Basics:",P="Pronouns:",PE="People:",V="Verbs:",F="Food:",H="Home & places:",T="Time:",A="Adjectives:",Q="Questions:",NU="Numbers:";
+const LESSONS=[
+{t:"Hei!",sub:"Sounds and greetings",w:[B+"hei",B+"ha det",B+"takk",B+"ja",B+"nei",B+"god morgen",B+"god natt"],
+ g:{h:"Three extra letters: Æ, Ø, Å",p:"Norwegian has 29 letters. The three extra ones come at the end: æ sounds like the \"a\" in cat, ø like the \"i\" in bird, and å like the \"aw\" in law. Spelling is quite regular, so once she knows the sounds she can read most words aloud. Try the ABC tab once today.",
+   ex:[["ærlig","honest"],["øye","eye"],["år","year"]]},
+ q:[{q:"Which letter sounds like \"aw\" in law?",o:["Æ","Ø","Å","A"],a:2,e:["Like \"a\" in cat.","Like \"i\" in bird, with round lips.","Correct. Å = \"aw\".","Like \"a\" in father."],k:"The alphabet ends with … X, Y, Z, Æ, Ø, Å."},
+    {q:"You are leaving a friend's home. What do you say?",o:["Hei","Ha det","God morgen","Takk"],a:1,e:["Hi, used when you arrive.","Bye. Short for \"ha det bra\" (have it good).","Good morning.","Thanks. Nice to say too, but it's not goodbye."],k:"Hei when you arrive, ha det when you leave."}],
+ task:"For the rest of today, greet each other only in Norwegian: god morgen, hei, ha det and god natt."},
+{t:"Jeg er",sub:"I am, you are",w:[P+"jeg",P+"du",P+"han",P+"hun",P+"vi",P+"de",V+"å være"],
+ g:{h:"Verbs don't change for the person",p:"English says I am, you are, she is. Norwegian uses the same form for everyone: er. This is true for every verb in the present tense, which makes Norwegian easier than English here.",
+   ex:[["Jeg er trøtt.","I am tired."],["Du er snill.","You are kind."],["Vi er i Japan.","We are in Japan."]]},
+ q:[{q:"She is tired.",o:["Hun er trøtt.","Hun ar trøtt.","Hun være trøtt.","Hun is trøtt."],a:0,e:["Correct. Er is used for every person.","\"Ar\" is not a Norwegian word.","Være is the dictionary form (to be). It isn't used after hun.","\"Is\" is English."],k:"jeg er, du er, han er, hun er, vi er, de er. Always er."},
+    {q:"What does \"de\" mean?",o:["the","they","you","we"],a:1,e:["\"The\" is an ending in Norwegian (huset = the house).","Correct. It's pronounced like \"dee\".","You = du.","We = vi."],k:"de = they, du = you, vi = we."}],
+ task:"Point at people around you or in photos and say: han er…, hun er…, vi er…"},
+{t:"Jeg forstår ikke",sub:"Polite survival phrases",w:[B+"unnskyld",B+"vær så snill",B+"velkommen",V+"å forstå",V+"å snakke",V+"å kunne"],
+ g:{h:"Ikke (not) comes after the verb",p:"Put ikke right after the verb. English needs a helper (\"I don't understand\"), but Norwegian doesn't. Just say the verb, then ikke.",
+   ex:[["Jeg forstår ikke.","I don't understand."],["Jeg snakker ikke norsk.","I don't speak Norwegian."],["Hun er ikke trøtt.","She isn't tired."]]},
+ q:[{q:"I don't understand.",o:["Jeg ikke forstår.","Jeg forstår ikke.","Ikke jeg forstår.","Jeg gjør ikke forstå."],a:1,e:["Ikke must come after the verb, not before.","Correct. Verb first, then ikke.","A sentence can't start with ikke here.","Norwegian has no \"do\" helper like English."],k:"Verb + ikke: forstår ikke, snakker ikke, er ikke."},
+    {q:"Can you speak more slowly?",o:["Kan du snakke saktere?","Kan du snakker saktere?","Du kan snakke saktere?","Kan du å snakke saktere?"],a:0,e:["Correct. After kan, the verb stays in its dictionary form.","Snakker has -r. That form isn't used after kan.","This is statement order. Questions start with the verb.","No å after kan."],k:"kan + verb without -r: kan snakke, kan hjelpe."}],
+ task:"You speak fast in Norwegian. She stops you with: \"Unnskyld, jeg forstår ikke. Kan du snakke saktere?\""},
+{t:"Spørsmål",sub:"Asking questions",w:[Q+"hva",Q+"hvem",Q+"hvor",Q+"når",Q+"hvorfor",Q+"hvordan",Q+"hvor mye"],
+ g:{h:"In questions, the verb jumps forward",p:"Question word, then verb, then person: Hvor bor du? For yes/no questions, start with the verb: Snakker du norsk? There's no \"do\" like in English.",
+   ex:[["Hvor bor du?","Where do you live?"],["Hva heter du?","What is your name?"],["Snakker du norsk?","Do you speak Norwegian?"]]},
+ q:[{q:"Where do you live?",o:["Hvor du bor?","Hvor bor du?","Hva bor du?","Bor hvor du?"],a:1,e:["The verb must come before du.","Correct. Question word → verb → person.","Hva = what, not where.","The question word comes first."],k:"Hvor bor du? Hva heter du? Når kommer du?"},
+    {q:"Do you speak Norwegian?",o:["Snakker du norsk?","Du snakker norsk?","Gjør du snakke norsk?","Snakke du norsk?"],a:0,e:["Correct. Yes/no questions start with the verb.","This is a statement. As a question it sounds surprised.","No \"do\" helper in Norwegian.","The verb needs -r here: snakker."],k:"Yes/no question = start with the verb."}],
+ task:"Ask 5 questions, each with a different question word. Answer in Norwegian."},
+{t:"Tall 1–10",sub:"Numbers, prices and time",w:[NU+"en",NU+"to",NU+"tre",NU+"fire",NU+"fem",NU+"seks",NU+"sju",NU+"åtte",NU+"ni",NU+"ti"],
+ g:{h:"Prices and the time",p:"Hvor mye koster det? means how much does it cost. For the time, say klokka er + number. Seven can be sju or syv, and both are correct.",
+   ex:[["Det koster ti kroner.","It costs ten kroner."],["Klokka er åtte.","It's eight o'clock."],["Hvor mye koster det?","How much does it cost?"]]},
+ q:[{q:"\"Klokka er fire\" means…",o:["It's four o'clock.","It costs four.","I am four.","Four clocks."],a:0,e:["Correct. Klokka = the clock, used for the time.","That would be: det koster fire.","That would be: jeg er fire år.","That would be: fire klokker."],k:"Klokka er + number = it's … o'clock."},
+    {q:"Which word is 7?",o:["seks","sju","åtte","ni"],a:1,e:["6","Correct. Also syv.","8","9"],k:"seks 6, sju 7, åtte 8."}],
+ task:"Count to ten together. Then say random numbers in Norwegian and she shows them with her fingers."},
+{t:"Familien min",sub:"Family, en and et",w:[PE+"en mamma",PE+"en pappa",PE+"en familie",PE+"en bror",PE+"en søster",PE+"et barn",PE+"en kjæreste",PE+"en venn"],
+ g:{h:"en / et, and \"my\" after the noun",p:"Every noun is either an en-word or an et-word (both mean \"a\"). Most are en. Learn the en/et together with the word. In everyday speech, \"my\" comes after the noun and the noun gets an ending: broren min (my brother).",
+   ex:[["broren min","my brother"],["søsteren min","my sister"],["barnet mitt","my child (et-word: mitt)"]]},
+ q:[{q:"a child",o:["en barn","et barn","barn en","barnet en"],a:1,e:["Barn is an et-word.","Correct.","The article comes first.","Barnet already means \"the child\"."],k:"Learn en/et with every new word. About 1 in 4 nouns are et-words."},
+    {q:"The everyday way to say \"my sister\"",o:["min søster","søsteren min","søster min","søsteren mitt"],a:1,e:["Correct too, but it sounds formal or emphatic.","Correct. This is the most natural.","It needs the ending: søsteren.","Mitt is only for et-words."],k:"noun + ending + min: broren min, vennen min."}],
+ task:"Show family photos and say: Dette er … min (This is my …)."},
+{t:"Hverdag",sub:"Everyday verbs",w:[V+"å ha",V+"å gå",V+"å komme",V+"å bo",V+"å jobbe",V+"å sove"],
+ g:{h:"Present tense: just add -r",p:"Take the dictionary form and add -r: bo → bor, jobbe → jobber, sove → sover. Only a few verbs break the rule: være → er, vite → vet, gjøre → gjør, and the helpers kan, vil, skal, må.",
+   ex:[["Jeg bor i Tokyo.","I live in Tokyo."],["Hun jobber i dag.","She is working today."],["Babyen sover.","The baby is sleeping."]]},
+ q:[{q:"He works in Tokyo.",o:["Han jobbe i Tokyo.","Han jobber i Tokyo.","Han jobbes i Tokyo.","Han er jobbe i Tokyo."],a:1,e:["Missing the -r.","Correct. jobbe + r.","-s is a passive form. Not this one.","No \"er\" needed. Norwegian has one present tense."],k:"Present tense = dictionary form + r."},
+    {q:"Present tense of \"å ha\" (to have)",o:["har","hav","haer","ha"],a:0,e:["Correct. ha + r.","Not a word.","Not a word.","This is the dictionary form."],k:"Jeg har, du har, vi har."}],
+ task:"Tell each other three things: where you live, where you work or study, and when you sleep."},
+{t:"Mat og drikke",sub:"Food and ordering",w:[F+"en mat",F+"et vann",F+"en kaffe",F+"en te",F+"et brød",F+"en ost",F+"en fisk",F+"et egg",F+"en melk"],
+ g:{h:"Kan jeg få …? Ordering politely",p:"The polite way to ask for something is Kan jeg få … (can I get …). Add takk at the end to be extra polite. Norwegians rarely use \"vær så snill\" in shops.",
+   ex:[["Kan jeg få en kaffe?","Can I have a coffee?"],["Kan jeg få vann, takk?","Can I have water, please?"],["Takk for maten.","Thanks for the food (said after every meal)."]]},
+ q:[{q:"Can I have a coffee?",o:["Kan jeg få en kaffe?","Jeg vil kaffe!","Gi meg kaffe.","Kan jeg få en kaffen?"],a:0,e:["Correct and polite.","Sounds demanding, and it's missing a verb (vil ha).","\"Give me coffee.\" Too rude.","Kaffen means \"the coffee\". Don't combine en with -en."],k:"Kan jeg få …, takk?"},
+    {q:"Brunost is a kind of…",o:["bread","fish","cheese","milk"],a:2,e:["Bread = brød.","Fish = fisk.","Correct. Brun = brown, ost = cheese.","Milk = melk."],k:"Brunost is a sweet brown cheese. Very Norwegian!"}],
+ task:"At dinner, she asks for everything with \"Kan jeg få …, takk?\" and says \"Takk for maten\" after."},
+{t:"Spise",sub:"Eating, and the verb-second rule",w:[V+"å spise",V+"å drikke",V+"å lage",V+"å kjøpe",V+"å like",F+"en frokost",F+"en middag",F+"et eple"],
+ g:{h:"The verb is always in second place",p:"In a normal sentence, the verb is element number 2. If the sentence starts with something else, like a time or a place, the person moves after the verb: I dag spiser jeg fisk (literally: today eat I fish).",
+   ex:[["Jeg spiser fisk i dag.","I'm eating fish today."],["I dag spiser jeg fisk.","Today I'm eating fish."],["Til frokost drikker vi te.","For breakfast we drink tea."]]},
+ q:[{q:"Today I'm making dinner.",o:["I dag jeg lager middag.","I dag lager jeg middag.","Lager i dag jeg middag.","I dag middag lager jeg."],a:1,e:["The verb must be second, so it goes before jeg.","Correct. I dag (1) lager (2) jeg…","The verb can't be first in a statement.","Middag can't sit between I dag and the verb."],k:"Time first? Then verb, then person."},
+    {q:"\"Jeg liker deg\" means…",o:["I like you.","I love you.","You like me.","I miss you."],a:0,e:["Correct.","That's jeg elsker deg or jeg er glad i deg.","That's du liker meg.","That's jeg savner deg."],k:"like = like, elske = love."}],
+ task:"Cook or eat together and describe it: Nå lager vi …, I dag spiser vi …"},
+{t:"Tid",sub:"Time words",w:[T+"i dag",T+"i morgen",T+"i går",T+"nå",T+"en dag",T+"en uke",T+"et år",T+"en kveld"],
+ g:{h:"Was: var",p:"Var is the past of være: jeg var = I was, vi var = we were. Use it with i går (yesterday). Remember the verb-second rule: I går var jeg …",
+   ex:[["I går var jeg syk.","Yesterday I was sick."],["I morgen er det lørdag.","Tomorrow is Saturday."],["Hva skal du i kveld?","What are you doing tonight?"]]},
+ q:[{q:"Yesterday I was tired.",o:["I går jeg var trøtt.","I går var jeg trøtt.","I morgen var jeg trøtt.","I går er jeg trøtt."],a:1,e:["The verb must come second.","Correct.","I morgen = tomorrow.","Er is present tense. You need var."],k:"I går var jeg … (verb second)."},
+    {q:"\"i morgen\" means…",o:["this morning","tomorrow","in the morning","yesterday"],a:1,e:["This morning = i morges.","Correct. A classic trap!","In the morning = om morgenen.","Yesterday = i går."],k:"i morgen = tomorrow, i går = yesterday."}],
+ task:"Before bed, say one thing about i dag and one plan for i morgen."},
+{t:"Hvordan er det?",sub:"Describing things",w:[A+"god",A+"stor",A+"liten",A+"kald",A+"varm",A+"fin",A+"ny",A+"gammel"],
+ g:{h:"Adjectives get -t with et-words",p:"With an en-word the adjective stays plain: en stor bil. With an et-word, add -t: et stort hus. Sentences with det also use the -t form: Det er kaldt. A few change a bit: ny → nytt, liten → lite.",
+   ex:[["en stor bil / et stort hus","a big car / a big house"],["Det er kaldt ute.","It's cold outside."],["et nytt år","a new year"]]},
+ q:[{q:"a big house",o:["en stor hus","et stor hus","et stort hus","et store hus"],a:2,e:["Hus is an et-word.","With et, the adjective needs -t.","Correct.","-e is for plural or \"the\" forms."],k:"et + adjective-t: et stort hus, et fint år."},
+    {q:"It's cold outside.",o:["Det er kald ute.","Det er kaldt ute.","Det er kalde ute.","Det kaldt ute."],a:1,e:["Det sentences need the -t form.","Correct.","-e is plural or definite.","The verb er is missing."],k:"Det er + adjective-t: det er fint, det er godt."}],
+ task:"Describe five things in the room: Bordet er stort, sofaen er ny…"},
+{t:"Følelser",sub:"Feelings",w:[A+"trøtt",A+"sulten",A+"glad",A+"koselig",A+"dyr",T+"alltid",T+"aldri"],
+ g:{h:"Jeg er glad i deg vs. jeg elsker deg",p:"Glad alone means happy. Glad i means to love or be fond of: family, friends, partners, even food. Elsker is stronger and more romantic. Koselig means cosy and pleasant, a very Norwegian feeling.",
+   ex:[["Jeg er glad i deg.","I love you (warm, everyday)."],["Jeg er glad!","I'm happy!"],["Det var koselig!","That was really nice!"]]},
+ q:[{q:"What do Norwegians often say to family to show love?",o:["Jeg er glad i deg.","Jeg er glad.","Jeg liker deg.","Jeg er koselig."],a:0,e:["Correct.","This just means \"I'm happy\".","\"I like you\". Friendly, but weaker.","\"I am cosy\". Sounds funny."],k:"glad = happy, glad i = love."},
+    {q:"\"aldri\" means…",o:["always","never","sometimes","now"],a:1,e:["Always = alltid.","Correct.","Sometimes = noen ganger.","Now = nå."],k:"alltid ↔ aldri"}],
+ task:"Every evening this week, say how you feel: Jeg er trøtt / sulten / glad."},
+{t:"Hjemme",sub:"At home",w:[H+"et hus",H+"et rom",H+"en dør",H+"en seng",H+"en bil",H+"en butikk",H+"en telefon",H+"penger"],
+ g:{h:"\"The\" is an ending",p:"Norwegian puts \"the\" at the end of the word. En-words get -en: en bil → bilen (the car). Et-words get -et: et hus → huset (the house).",
+   ex:[["Huset er rødt.","The house is red."],["Bilen er ny.","The car is new."],["Telefonen min er tom for strøm.","My phone is out of battery."]]},
+ q:[{q:"the door",o:["en dør","døren","døret","den dør"],a:1,e:["That's \"a door\".","Correct. En-word + en.","-et is for et-words.","\"The\" goes at the end, not before."],k:"en dør → døren, en bil → bilen."},
+    {q:"the room (et rom)",o:["rommen","romet","rommet","et rommet"],a:2,e:["-en is for en-words.","Short vowel: the m doubles.","Correct.","Don't use et together with the ending."],k:"et rom → rommet, et hus → huset."}],
+ task:"Walk around your home and name things with \"the\": døren, sengen, telefonen…"},
+{t:"Norge",sub:"Norway, i and på",w:[H+"en by",H+"et land",H+"et fjell",H+"en hytte",H+"en tur",H+"en snø"],
+ g:{h:"i or på?",p:"I (in) is used for cities and countries: i Oslo, i Norge, i Japan. På (on/at) is used for mountains, islands, the cabin and some places: på fjellet, på hytta, på jobb.",
+   ex:[["Jeg bor i Tokyo.","I live in Tokyo."],["Vi er på hytta.","We are at the cabin."],["Vi går tur på fjellet.","We go hiking in the mountains."]]},
+ q:[{q:"We are at the cabin.",o:["Vi er i hytta.","Vi er på hytta.","Vi er til hytta.","Vi er av hytta."],a:1,e:["Means \"inside the cabin\". Possible, but not the usual meaning.","Correct.","Til = to (movement).","Av = of / off."],k:"på hytta, på fjellet, på jobb."},
+    {q:"I live in Bergen.",o:["Jeg bor på Bergen.","Jeg bor i Bergen.","Jeg bor til Bergen.","Jeg bo i Bergen."],a:1,e:["Cities use i.","Correct.","Til = to.","Bo needs -r: bor."],k:"i + city or country."}],
+ task:"Look at photos of Norway together. Tell her one story from your hometown."},
+{t:"Vil og må",sub:"Helper verbs",w:[V+"å se",V+"å høre",V+"å lese",V+"å skrive",V+"å vite",V+"å ville",V+"å trenge",V+"å hjelpe",V+"å glemme",V+"å elske"],
+ g:{h:"vil, kan, må, skal + verb",p:"vil = want to, kan = can, må = must, skal = going to. The next verb has no -r and no å: Jeg vil lese. Jeg må gå. Vi skal se en film.",
+   ex:[["Jeg vil reise til Norge.","I want to travel to Norway."],["Jeg må kjøpe melk.","I have to buy milk."],["Skal vi se en film?","Shall we watch a film?"]]},
+ q:[{q:"I have to go now.",o:["Jeg må gå nå.","Jeg må går nå.","Jeg må å gå nå.","Jeg går må nå."],a:0,e:["Correct.","After må, no -r.","No å after må.","Må comes first, then the verb."],k:"må / vil / kan / skal + verb (no -r, no å)."},
+    {q:"\"Jeg vet ikke\" means…",o:["I don't know.","I don't see.","I don't want to.","I won't."],a:0,e:["Correct. vite → vet (irregular).","That's jeg ser ikke.","That's jeg vil ikke.","That's jeg vil ikke / skal ikke."],k:"vite → vet. One of the few irregular verbs."}],
+ task:"Plan the weekend in Norwegian: Vi skal …, jeg vil …, vi må …"}
+];
+let LS=null; /* active lesson state */
+function lessonIndex(){ return LESSONS.findIndex((l,i)=>!S.lessons[i]); }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function buildQuiz(L){
+  const ws=L.w.map(id=>BYID[id]).filter(Boolean);
+  const pool=ws.length>=4?ws:ws.concat(WORDS.filter(w=>!L.w.includes(w.id)).slice(0,4));
+  const vocab=shuffle(ws).slice(0,4).map((w,i)=>{
+    const opts=shuffle([w,...shuffle(pool.filter(x=>x.id!==w.id)).slice(0,3)]);
+    const toNo=i%2===0;
+    return {q:toNo?`How do you say "${w.en}" in Norwegian?`:`What does "${w.no}" mean?`,say:toNo?null:w.no,
+      o:opts.map(x=>toNo?x.no:x.en),a:opts.indexOf(w),e:opts.map(x=>x.id===w.id?`Correct. ${x.no} = ${x.en}`:`${x.no} = ${x.en}`),
+      k:w.s?`${w.s} (${w.se})`:"",ks:w.s||""};
+  });
+  return [...vocab,...L.q.map(x=>Object.assign({},x))];
+}
+const STEP_NAMES=["New words","Grammar","Quiz","Speak","Together"];
+function startLesson(i){
+  const L=LESSONS[i];
+  const speakIds=shuffle(L.w.filter(id=>BYID[id])).slice(0,3);
+  LS={i,step:0,quiz:buildQuiz(L),qi:0,picked:null,wrong:0,sp:{ids:speakIds,k:0,status:"idle",tries:0,heard:""}};
+  renderLearn(); window.scrollTo(0,0);
+}
+function renderLearn(){
+  const el=$("#tab-learn");
+  if(!LS){ el.innerHTML=lessonHome(); bindLessonHome(); return; }
+  const L=LESSONS[LS.i];
+  let h=`<div class="lhead"><button class="link" id="backL">← All lessons</button><span class="note">Lesson ${LS.i+1} of ${LESSONS.length}</span></div>
+  <div class="lhead"><h2>${esc(L.t)}</h2></div>
+  ${LS.step<5?`<div class="steps">${STEP_NAMES.map((n,i)=>`<span class="${i<LS.step?"past":i===LS.step?"on":""}"></span>`).join("")}</div>
+  <div class="stepname">Step ${LS.step+1} of 5 · ${STEP_NAMES[LS.step]}</div>`:""}`;
+  if(LS.step===0) h+=stepWords(L);
+  else if(LS.step===1) h+=stepGrammar(L);
+  else if(LS.step===2) h+=stepQuiz();
+  else if(LS.step===3) h+=stepSpeak();
+  else if(LS.step===4) h+=stepTogether(L);
+  else h+=stepDone(L);
+  el.innerHTML=h;
+  $("#backL").onclick=()=>{ try{ if(rec) rec.abort(); }catch(e){} LS=null; renderLearn(); };
+  bindStep();
+}
+function lessonHome(){
+  const cur=lessonIndex(), due=counts("normal").due, doneN=Object.keys(S.lessons).length;
+  let h="";
+  if(cur===-1) h+=`<div class="today"><span class="eyebrow">Course complete</span><h2>Alle leksjonene er ferdige!</h2><span class="sub">All ${LESSONS.length} lessons done. Keep reviewing in Kort and Snakk every day.</span></div>`;
+  else {
+    const L=LESSONS[cur];
+    h+=`<div class="today"><span class="eyebrow">Dagens leksjon · Lesson ${cur+1}</span>
+      <h2>${esc(L.t)}</h2><span class="sub">${esc(L.sub)} · ${L.w.length} new words · about 20 min</span>
+      ${due?`<span class="note">First, review the <b>${due}</b> card${due>1?"s":""} waiting in Kort (about ${Math.max(2,Math.round(due*0.3))} min).</span>`:""}
+      <button class="big primary" data-start="${cur}">${doneN?"Start today's lesson":"Start lesson 1"}</button></div>`;
+  }
+  h+=`<h2>All lessons <span class="note" style="font-weight:400">${doneN}/${LESSONS.length} done</span></h2><div class="list">`;
+  LESSONS.forEach((L,i)=>{
+    const done=!!S.lessons[i], isCur=i===cur, locked=!done&&!isCur;
+    h+=`<button class="lrow ${done?"done":isCur?"cur":""}" data-start="${i}" ${locked?"disabled":""}>
+      <span class="num">${done?"✓":i+1}</span><span class="t"><b>${esc(L.t)}</b><span>${esc(L.sub)}</span></span>
+      <span class="s">${done?"Done":isCur?"Today":"Locked"}</span></button>`;
+  });
+  return h+`</div>`;
+}
+function bindLessonHome(){ document.querySelectorAll("[data-start]").forEach(b=>b.onclick=()=>startLesson(+b.dataset.start)); }
+function nextBtn(label){ return `<button class="big primary" id="stepNext">${label}</button>`; }
+function stepWords(L){
+  return `<p class="note">Tap 🔊 to hear each word and sentence. Repeat each one out loud twice.</p><div class="wl">${L.w.map(id=>BYID[id]).filter(Boolean).map(w=>`
+    <div class="wcard"><div class="top"><b>${esc(w.no)}</b>${sayBtn(w.no)}<span>${esc(w.en)}</span></div>
+    ${w.s?`<div class="ex">${esc(w.s)} ${sayBtn(w.s)} <i>${esc(w.se)}</i></div>`:""}</div>`).join("")}</div>${nextBtn("Next: grammar")}`;
+}
+function stepGrammar(L){
+  return `<div class="gram"><h3>${esc(L.g.h)}</h3><p>${esc(L.g.p)}</p>
+    <div class="exs">${L.g.ex.map(x=>`<div>${sayBtn(x[0])}<b>${esc(x[0])}</b><i>${esc(x[1])}</i></div>`).join("")}</div></div>${nextBtn("Next: quiz")}`;
+}
+function stepQuiz(){
+  const q=LS.quiz[LS.qi], ans=LS.picked!==null;
+  let h=`<div class="note">Question ${LS.qi+1} of ${LS.quiz.length}</div>
+  <div class="qq">${esc(q.q)} ${q.say?sayBtn(q.say):""}</div><div class="opts">`;
+  q.o.forEach((o,i)=>{
+    const cls=ans?(i===q.a?"ok":i===LS.picked?"bad":""):"";
+    const mark=ans?(i===q.a?" ✅":i===LS.picked?" ✗":""):"";
+    h+=`<button class="opt ${cls}" data-opt="${i}" ${ans?"disabled":""}><span class="nb">${i+1}</span>
+      <span class="ot"><b>${esc(o)}${mark}</b>${ans?`<span class="oe">${esc(q.e[i])}</span>`:""}</span></button>`;
+  });
+  h+=`</div>`;
+  if(ans){
+    if(q.k) h+=`<div class="key">💡 <b>Key point:</b> ${esc(q.k)} ${q.ks?sayBtn(q.ks):""}</div>`;
+    h+=nextBtn(LS.qi+1<LS.quiz.length?"Next question":"Next: speak");
+  }
+  return h;
+}
+function stepSpeak(){
+  const sp=LS.sp;
+  if(!SR) return `<div class="card"><div class="prompt">Microphone checking isn't available in this browser</div><div class="hint">Say the lesson words to Denis instead, then continue.</div></div>${nextBtn("Next: together")}`;
+  if(sp.k>=sp.ids.length) return `<div class="card right"><div class="prompt">Bra jobba!</div><div class="hint">Speaking done.</div></div>${nextBtn("Next: together")}`;
+  const w=BYID[sp.ids[sp.k]], st=sp.status, fin=st==="right"||st==="revealed";
+  return `<div class="note">Word ${sp.k+1} of ${sp.ids.length}</div>
+  <div class="card ${st==="right"?"right":(st==="wrong"||st==="revealed")?"wrong":""}">
+    <div class="hint">Say in Norwegian</div><div class="prompt">${esc(w.en)}</div>
+    ${fin?`<div class="answer">${esc(w.no)}</div>${sayBtn(w.no)}`:""}
+    <div class="heard" aria-live="polite">${sp.heard?`Heard: <b>${esc(sp.heard)}</b>`:""}</div>
+    <div class="verdict ${st==="right"?"ok":"no"}">${st==="right"?"Riktig! ✓":st==="wrong"?"Not quite. Try again ✗":st==="revealed"?"Listen, repeat it once, then go on.":st==="error"?esc(sp.err):""}</div>
+    ${fin?"":`<button class="mic ${st==="listening"?"on":""}" id="lmic" aria-label="Tap and speak">${ICON_MIC}</button>
+      <div class="tries">${st==="listening"?"Listening…":sp.tries?`Try ${sp.tries+1} of 3`:"Tap the mic and speak"}</div>
+      <div class="smallbtns"><button class="link" id="lhear">Hear it</button><button class="link" id="lshow">Show answer</button>${sp.tries||st==="error"?`<button class="link" id="lok">I said it right</button>`:""}</div>`}
+  </div>${fin?`<button class="big primary" id="lnext">Next word</button>`:""}`;
+}
+function stepTogether(L){
+  return `<div class="task"><span class="eyebrow" style="color:var(--accent);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700">Do this with Denis</span><p>${esc(L.task)}</p></div>
+  ${nextBtn("We did it. Finish the lesson")}`;
+}
+function stepDone(L){
+  const nxt=lessonIndex();
+  return `<div class="card right"><div class="prompt">Leksjon ${LS.i+1} er ferdig!</div>
+    <div class="hint">${L.w.length} words added to Kort and Snakk. They'll come back for review on the right days.</div>
+    ${nxt!==-1?`<div class="hint">Next up: <b>${esc(LESSONS[nxt].t)}</b>, unlocked.</div>`:""}</div>
+    <button class="big primary" id="toCards">Review cards now</button>
+    <button class="big" id="toHome">Back to lessons</button>`;
+}
+function bindStep(){
+  const nb=$("#stepNext");
+  if(nb) nb.onclick=()=>{
+    if(LS.step===2&&LS.qi+1<LS.quiz.length){ LS.qi++; LS.picked=null; renderLearn(); return; }
+    if(LS.step===4){ finishLesson(); return; }
+    LS.step++; LS.picked=null; renderLearn(); window.scrollTo(0,0);
+  };
+  document.querySelectorAll("[data-opt]").forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.opt, q=LS.quiz[LS.qi]; LS.picked=i;
+    if(i!==q.a && !q.retry){ LS.quiz.push(Object.assign({},q,{retry:true})); }
+    renderLearn();
+  });
+  const sp=LS&&LS.sp;
+  const mic=$("#lmic");
+  if(mic) mic.onclick=()=>{
+    if(sp.status==="listening"){ try{rec.stop();}catch(e){} return; }
+    const w=BYID[sp.ids[sp.k]]; sp.status="listening"; sp.heard=""; renderLearn();
+    listen(alts=>{
+      const r=checkWord(alts,w); sp.heard=r.heard;
+      if(r.ok){ sp.status="right"; renderLearn(); say(w.no); }
+      else { sp.tries++; if(sp.tries>=3){ sp.status="revealed"; renderLearn(); say(w.no); } else { sp.status="wrong"; renderLearn(); } }
+    },err=>{
+      sp.status="error";
+      sp.err=err==="not-allowed"||err==="service-not-allowed"?"Microphone blocked. Allow mic access for this page.":err==="no-speech"?"Didn't hear anything. Try again a bit louder.":err==="network"?"Needs an internet connection.":"Couldn't listen. Try again.";
+      renderLearn();
+    });
+  };
+  const lh=$("#lhear"); if(lh) lh.onclick=()=>say(BYID[sp.ids[sp.k]].no);
+  const ls=$("#lshow"); if(ls) ls.onclick=()=>{ sp.status="revealed"; renderLearn(); say(BYID[sp.ids[sp.k]].no); };
+  const lo=$("#lok"); if(lo) lo.onclick=()=>{ sp.status="right"; renderLearn(); say(BYID[sp.ids[sp.k]].no); };
+  const ln=$("#lnext"); if(ln) ln.onclick=()=>{ sp.k++; sp.status="idle"; sp.tries=0; sp.heard=""; renderLearn(); };
+  const tc=$("#toCards"); if(tc) tc.onclick=()=>{ LS=null; show("cards"); };
+  const th=$("#toHome"); if(th) th.onclick=()=>{ LS=null; renderLearn(); window.scrollTo(0,0); };
+}
+function finishLesson(){
+  const L=LESSONS[LS.i];
+  L.w.forEach(id=>{ if(BYID[id]) S.deck[id]=true; });
+  S.lessons[LS.i]=today(); save(); resetQueues();
+  LS.step=5; renderLearn(); window.scrollTo(0,0);
 }
 
 /* ---------- Alphabet ---------- */
@@ -716,7 +1016,7 @@ function renderWords(){
   const cats=["All",...Object.keys(DATA),...(S.custom.length?["Mine"]:[])];
   const list=WORDS.filter(w=>WF==="All"||w.c===WF);
   const inDeck=list.filter(w=>S.deck[w.id]).length;
-  let h=`<p class="note">Tick the words she has learned together with you. Ticked words go into both decks.</p>
+  let h=`<p class="note">Lessons add their words automatically. You can also tick words she already knows to put them in her decks early.</p>
   <div class="row">${cats.map(c=>`<button class="chip" data-cat="${esc(c)}" aria-pressed="${WF===c}">${esc(c)}</button>`).join("")}</div>
   <div class="row" style="margin-top:10px;justify-content:space-between">
     <span class="note">${inDeck} of ${list.length} in deck</span>
@@ -792,11 +1092,11 @@ function renderSettings(){
      .catch(()=>toast("That file isn't a Norsk Ordkort backup"));
   };
   const r=$("#rst"); if(r) r.onclick=()=>{ confirmReset=true; renderSettings(); };
-  const y=$("#rYes"); if(y) y.onclick=()=>{ S=blank(); seedStarter(S); save(); reindex(); resetQueues(); confirmReset=false; renderSettings(); toast("Progress reset"); };
+  const y=$("#rYes"); if(y) y.onclick=()=>{ S=blank(); save(); reindex(); resetQueues(); confirmReset=false; renderSettings(); toast("Progress reset"); };
   const n=$("#rNo"); if(n) n.onclick=()=>{ confirmReset=false; renderSettings(); };
 }
 
-renderCards();
+show("learn");
 </script>
 </body>
 </html>
